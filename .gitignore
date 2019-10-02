@@ -1,0 +1,15 @@
+build/
+x64/
+.vs/
+doxydoc/
+*.json
+/testsite/dist/*.*
+/build2015
+/version/include/version.h
+/version/SetVersion.cmake
+*.aps
+.DS_Store
+xcodebuild
+cmake-build-debug
+.idea
+seospiderinstaller/config/config.xml
