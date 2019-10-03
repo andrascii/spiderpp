@@ -76,8 +76,6 @@ struct IUnknown;
 
 #ifdef Q_OS_WIN
 #include <windows.h>
-#else
-#error You compile this code on unsupported platform!
 #endif
 
 #include "common_macro_helpers.h"

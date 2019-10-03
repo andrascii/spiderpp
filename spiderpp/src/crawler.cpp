@@ -18,7 +18,6 @@
 #include "xml_sitemap_loader.h"
 #include "get_host_info_request.h"
 #include "get_host_info_response.h"
-#include "host_info.h"
 #include "isequenced_storage.h"
 #include "helpers.h"
 #include "common_constants.h"
@@ -584,7 +583,7 @@ void Crawler::onHostInfoResponse(Requester*, const GetHostInfoResponse& response
 {
 	m_hostInfoRequester->stop();
 
-	if (!response.hostInfo.isValid())
+	if (response.hostInfo.error() != QHostInfo::NoError)
 	{
 		ServiceLocator* serviceLocator = ServiceLocator::instance();
 
@@ -600,7 +599,7 @@ void Crawler::onHostInfoResponse(Requester*, const GetHostInfoResponse& response
 		return;
 	}
 
-	m_hostInfo.reset(new HostInfo(response.hostInfo));
+	m_hostInfo.reset(new QHostInfo(response.hostInfo));
 	m_options->setStartCrawlingPage(response.url);
 
 	tryToLoadCrawlingDependencies();
@@ -879,14 +878,9 @@ const WebHostInfo * Crawler::webHostInfo() const
 
 std::optional<QByteArray> Crawler::currentCrawledSiteIPv4() const
 {
-	if (m_hostInfo)
+	if (m_hostInfo && !m_hostInfo->addresses().isEmpty())
 	{
-		QList<QByteArray> ipv4Addresses = m_hostInfo->stringAddressesIPv4();
-
-		if (!ipv4Addresses.isEmpty())
-		{
-			return ipv4Addresses.front();
-		}
+		return m_hostInfo->addresses().first().toString().toUtf8();
 	}
 
 	return std::make_optional<QByteArray>();

@@ -3,6 +3,7 @@ set(CMAKE_SYSTEM_VERSION 7.0 CACHE STRING INTERNAL FORCE)
 
 include(cmake/configure_msvc_runtime.cmake)
 include(cmake/add_msvc_precompiled_header.cmake)
+include(cmake/cotire.cmake)
 
 set(SPIDERPP_LIB spiderpp)
 set(CURL_LIB curl)
@@ -30,7 +31,7 @@ find_package(Qt5 REQUIRED Widgets Network Xml XmlPatterns COMPONENTS)
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost REQUIRED system date_time program_options filesystem COMPONENTS)
 
-if(APPLE AND NOT UNIX)
+if(APPLE)
 	find_package(OpenSSL)
 	find_package(curl)
 else()

@@ -233,8 +233,8 @@ struct ParsedPage
 
 using ParsedPagePtr = std::shared_ptr<ParsedPage>;
 
-Q_DECLARE_METATYPE(ParsedPagePtr)
-Q_DECLARE_METATYPE(std::vector<ParsedPagePtr>)
-Q_DECLARE_METATYPE(ParsedPageWeakPtr)
-
 }
+
+Q_DECLARE_METATYPE(CrawlerEngine::ParsedPagePtr)
+Q_DECLARE_METATYPE(std::vector<CrawlerEngine::ParsedPagePtr>)
+Q_DECLARE_METATYPE(CrawlerEngine::ParsedPageWeakPtr)

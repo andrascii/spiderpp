@@ -1,6 +1,5 @@
 #include "host_info_provider.h"
 #include "handler_registry.h"
-#include "host_info.h"
 #include "get_host_info_request.h"
 #include "get_host_info_response.h"
 #include "thread_message_dispatcher.h"
@@ -49,14 +48,14 @@ void HostInfoProvider::handleRequest(RequesterSharedPtr requester)
 	ASSERT(requester->request()->requestType() == RequestType::RequestGetHostInfo);
 	m_requester = requester;
 	GetHostInfoRequest* request = static_cast<GetHostInfoRequest*>(requester->request());
-	m_pendingResponse.reset(new GetHostInfoResponse(HostInfo(request->webpage.host(QUrl::FullyEncoded).toLatin1())));
+	m_pendingResponse.reset(new GetHostInfoResponse(QHostInfo::fromName(request->webpage.host(QUrl::FullyEncoded).toLatin1())));
 
 	const DownloadRequest downloadRequest(CrawlerRequest{ request->webpage, DownloadRequestType::RequestTypeHead}, CrawlerSharedState::instance()->turnaround());
 	m_downloadRequester.reset(downloadRequest, this, &HostInfoProvider::onLoadingDone);
 	m_downloadRequester->start();
 
 	DEBUGLOG << "IP address for:" << request->webpage.toDisplayString()
-		<< "is" << (!m_pendingResponse->hostInfo.stringAddressesIPv4().isEmpty() ? m_pendingResponse->hostInfo.stringAddressesIPv4()[0] : QByteArray("unknown"));
+		<< "is" << (!m_pendingResponse->hostInfo.addresses().isEmpty() ? m_pendingResponse->hostInfo.addresses().first().toString() : QString("unknown"));
 }
 
 void HostInfoProvider::stopRequestHandling(RequesterSharedPtr requester)

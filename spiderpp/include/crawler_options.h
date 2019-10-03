@@ -567,6 +567,6 @@ private:
 	CrawlerOptionsData m_data;
 };
 
-Q_DECLARE_METATYPE(CrawlerOptionsData)
-
 }
+
+Q_DECLARE_METATYPE(CrawlerEngine::CrawlerOptionsData)

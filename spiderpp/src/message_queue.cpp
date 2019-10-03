@@ -33,7 +33,7 @@ Message MessageQueue::extractMessage()
 	Message message = std::move(m_messages.back());
 	m_messages.pop_back();
 
-	return std::move(message);
+	return message;
 }
 
 }

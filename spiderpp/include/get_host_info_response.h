@@ -1,14 +1,13 @@
 #pragma once
 
 #include "iresponse.h"
-#include "host_info.h"
 
 namespace CrawlerEngine
 {
 
 struct GetHostInfoResponse : IResponse
 {
-	GetHostInfoResponse(HostInfo hostInfo)
+	GetHostInfoResponse(QHostInfo hostInfo)
 		: hostInfo(hostInfo)
 	{
 	}
@@ -20,7 +19,7 @@ struct GetHostInfoResponse : IResponse
 		return ResponseType::ResponseTypeGetHostInfo;
 	}
 
-	HostInfo hostInfo;
+	QHostInfo hostInfo;
 	Url url;
 };
 

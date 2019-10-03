@@ -37,8 +37,6 @@ struct CrawlingProgress
 	size_t pendingLinkCount;
 };
 
-Q_DECLARE_METATYPE(CrawlingProgress)
-
 class Crawler : public QObject
 {
 	Q_OBJECT
@@ -212,7 +210,7 @@ private:
 
 	RequesterWrapper m_hostInfoRequester;
 	WebHostInfo* m_webHostInfo;
-	std::unique_ptr<HostInfo> m_hostInfo;
+	std::unique_ptr<QHostInfo> m_hostInfo;
 
 	QPointer<Session> m_session;
 
@@ -223,3 +221,5 @@ private:
 };
 
 }
+
+Q_DECLARE_METATYPE(CrawlerEngine::CrawlingProgress)

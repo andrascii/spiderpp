@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.8.11)
-set(CMAKE_SYSTEM_VERSION 7.0 CACHE TYPE INTERNAL FORCE)
-
-include(../cmake/configure_msvc_runtime.cmake)
-include(../cmake/add_msvc_precompiled_header.cmake)
+set(CMAKE_SYSTEM_VERSION 7.0 CACHE STRING INTERNAL FORCE)
+set(CMAKE_CXX_STANDARD 17)
 
 project(${SPIDERPP_LIB})
 
@@ -70,20 +68,20 @@ include_directories(
 
 target_link_libraries(
 	${SPIDERPP_LIB}
-        ${COMMON_LIB}
-        ${GUMBO_LIB}
-        "${MyHtmlLibName}_static" # change this solution to that which is more reliable
-        ${Boost_LIBRARIES}
-        ${Boost_SYSTEM_LIBRARY}
-        ${Boost_FILESYSTEM_LIBRARY}
-        ${Boost_ASIO_LIBRARY}
-        ${Boost_REGEX_LIBRARY}
-        Qt5::Network
-        Qt5::Xml
-        Qt5::XmlPatterns
+	${COMMON_LIB}
+	${GUMBO_LIB}
+	"${MyHtmlLibName}_static" # change this solution to that which is more reliable
+	${Boost_LIBRARIES}
+	${Boost_SYSTEM_LIBRARY}
+	${Boost_FILESYSTEM_LIBRARY}
+	${Boost_ASIO_LIBRARY}
+	${Boost_REGEX_LIBRARY}
+	Qt5::Network
+	Qt5::Xml
+	Qt5::XmlPatterns
 )
 
-if(APPLE AND NOT UNIX)
+if(APPLE)
 	target_link_libraries(
 		${SPIDERPP_LIB}
 		${CURL_LIBRARIES}
@@ -97,4 +95,9 @@ else()
 		ws2_32.lib
 		ntdll.lib
 	)
+endif()
+
+if(NOT WIN32)
+	set_target_properties(${SPIDERPP_LIB} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "include/stdafx.h")
+	cotire(${SPIDERPP_LIB})
 endif()

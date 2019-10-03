@@ -63,6 +63,7 @@
 #include <QUrlQuery>
 #include <QJsonDocument>
 #include <QAbstractXmlNodeModel>
+#include <QHostInfo>
 
 //
 // C/C++
@@ -97,6 +98,8 @@
 // boost
 //
 
+#ifdef Q_OS_WIN
+
 namespace std
 {
 
@@ -122,6 +125,8 @@ struct unary_function
 
 }
 
+#endif
+
 #include <boost/functional/hash.hpp>
 #include <boost/process/child.hpp>
 #include <boost/process/search_path.hpp>
@@ -129,8 +134,6 @@ struct unary_function
 
 #ifdef Q_OS_WIN
 #include <windows.h>
-#else
-#error You compile this code on unsupported platform!
 #endif
 
 #include "common_macro_helpers.h"

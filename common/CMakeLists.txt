@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.11)
 set(CMAKE_SYSTEM_VERSION 7.0 CACHE STRING INTERNAL FORCE)
+set(CMAKE_CXX_STANDARD 17)
 
 set(COMMON_SOURCES_DIR src)
 set(COMMON_HEADERS_DIR include)
@@ -57,3 +58,8 @@ target_link_libraries(
 	${COMMON_LIB}
 	Qt5::Network
 )
+
+if(NOT WIN32)
+	set_target_properties(${COMMON_LIB} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "include/stdafx.h")
+	cotire(${COMMON_LIB})
+endif()
