@@ -24,12 +24,21 @@ set(CURL_RELEASE_DIR ${Binary_Dir}/lib/release)
 message(STATUS "CURL Debug directory ${CURL_DEBUG_DIR}")
 message(STATUS "CURL Release directory ${CURL_RELEASE_DIR}")
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-	# in Debug mode
-	set(CURL_LIBS ${CURL_LIBRARIES_LIST} ${CURL_DEBUG_DIR}/libcurl.lib CACHE INTERNAL "")
-else (CMAKE_BUILD_TYPE STREQUAL "Debug")
-	# in Release mode
-	set(CURL_LIBS ${CURL_LIBRARIES_LIST} ${CURL_RELEASE_DIR}/libcurl.lib CACHE INTERNAL "")
-endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(WIN32)
+	if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+		# in Debug mode
+		set(CURL_LIBS ${CURL_LIBRARIES_LIST} ${CURL_DEBUG_DIR}/libcurl.lib CACHE INTERNAL "")
+	else (CMAKE_BUILD_TYPE STREQUAL "Debug")
+		# in Release mode
+		set(CURL_LIBS ${CURL_LIBRARIES_LIST} ${CURL_RELEASE_DIR}/libcurl.lib CACHE INTERNAL "")
+	endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+else()
+	if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+		set(CURL_LIBS ${CURL_LIBRARIES_LIST} ${CURL_DEBUG_DIR}/libcurl.a CACHE INTERNAL "")
+	else()
+		# in Release mode
+                set(CURL_LIBS ${CURL_LIBRARIES_LIST} ${CURL_RELEASE_DIR}/libcurl.a CACHE INTERNAL "")
+	endif()
+endif()
 
 add_definitions(-DCURL_STATICLIB)

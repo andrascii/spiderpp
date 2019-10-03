@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8.11)
 set(CMAKE_SYSTEM_VERSION 7.0 CACHE TYPE INTERNAL FORCE)
 
+include(../cmake/configure_msvc_runtime.cmake)
+include(../cmake/add_msvc_precompiled_header.cmake)
+
 project(${SPIDERPP_LIB})
 
 set(SPIDERPP_SOURCES_DIR src)
@@ -22,9 +25,9 @@ source_group("Precompiled Headers" FILES include/stdafx.h src/stdafx.cpp)
 configure_msvc_runtime()
 
 add_library(
- 	${SPIDERPP_LIB} 
- 	${SPIDERPP_SOURCES_LIST} 
- 	${SPIDERPP_HEADERS_LIST} 
+ 	${SPIDERPP_LIB}
+ 	${SPIDERPP_SOURCES_LIST}
+ 	${SPIDERPP_HEADERS_LIST}
 )
 
 add_definitions(
@@ -44,7 +47,7 @@ if(MSVC)
 		/W4
 		/WX
 	)
-	
+
 	set_target_properties(
 		${SPIDERPP_LIB}
 		PROPERTIES COMPILE_FLAGS "/FI\"stdafx.h\""
@@ -65,26 +68,33 @@ include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
 )
 
-if(WIN32)
-	set(OS_SPECIFIC_DEPS ws2_32.lib ntdll.lib)
-endif()
-
-#add_dependencies(${SPIDERPP_LIB} ${CURL_DEPENDENCY})
-add_dependencies(${SPIDERPP_LIB} ${CURL_LIB})
-
 target_link_libraries(
 	${SPIDERPP_LIB}
-	${GUMBO_LIB}
-	${COMMON_LIB}
-	${OS_SPECIFIC_DEPS}
-	${CURL_LIBS}
-	"${MyHtmlLibName}_static" # change this solution to that which is more reliable
-	${Boost_LIBRARIES}
-	${Boost_SYSTEM_LIBRARY}
-	${Boost_FILESYSTEM_LIBRARY}
-	${Boost_ASIO_LIBRARY}
-	${Boost_REGEX_LIBRARY}
-	Qt5::Network
-	Qt5::Xml
-	Qt5::XmlPatterns
+        ${COMMON_LIB}
+        ${GUMBO_LIB}
+        "${MyHtmlLibName}_static" # change this solution to that which is more reliable
+        ${Boost_LIBRARIES}
+        ${Boost_SYSTEM_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
+        ${Boost_ASIO_LIBRARY}
+        ${Boost_REGEX_LIBRARY}
+        Qt5::Network
+        Qt5::Xml
+        Qt5::XmlPatterns
 )
+
+if(APPLE AND NOT UNIX)
+	target_link_libraries(
+		${SPIDERPP_LIB}
+		${CURL_LIBRARIES}
+	)
+else()
+	add_dependencies(${SPIDERPP_LIB} ${CURL_LIB})
+
+	target_link_libraries(
+		${SPIDERPP_LIB}
+		${CURL_LIBS}
+		ws2_32.lib
+		ntdll.lib
+	)
+endif()
