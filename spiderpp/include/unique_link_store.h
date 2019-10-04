@@ -4,7 +4,7 @@
 #include "parsed_page.h"
 #include "crawler_shared_state.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct RefreshUrlRequest

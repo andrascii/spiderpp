@@ -6,7 +6,7 @@
 #include "take_screenshot_request.h"
 #endif
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 WebHostInfo::WebHostInfo(QObject* parent, ISpecificLoader* xmlSiteMapLoader, ISpecificLoader* robotsTxtLoader)

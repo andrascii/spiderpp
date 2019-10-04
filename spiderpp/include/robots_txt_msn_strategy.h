@@ -2,7 +2,7 @@
 
 #include "robots_txt_base_strategy.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 // msnbot

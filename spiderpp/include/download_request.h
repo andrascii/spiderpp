@@ -3,7 +3,7 @@
 #include "irequest.h"
 #include "crawler_request.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct DownloadRequest : public IRequest

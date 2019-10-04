@@ -2,7 +2,7 @@
 
 #include "robots_txt_rules.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 enum class UserAgentType;

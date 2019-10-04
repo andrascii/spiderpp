@@ -2,7 +2,7 @@
 
 #include "parsed_page_hasher.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class ParsedPageHasherProxy

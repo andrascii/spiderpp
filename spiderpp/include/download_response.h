@@ -4,7 +4,7 @@
 #include "response_headers.h"
 #include "hops_chain.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct DownloadResponse : public IResponse

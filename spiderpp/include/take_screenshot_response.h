@@ -3,7 +3,7 @@
 
 #include "iresponse.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class ITakeScreenshotResponse : public IResponse

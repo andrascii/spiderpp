@@ -2,7 +2,7 @@
 
 #include "requester.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class IDownloadHandler

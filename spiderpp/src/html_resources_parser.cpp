@@ -9,7 +9,7 @@
 #include "frames_detector_parser.h"
 #include "myhtml_parser.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 HtmlResourcesParser::HtmlResourcesParser(IHtmlParser* htmlParser, bool parseMetaHrefLangLinks)

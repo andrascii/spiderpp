@@ -1,6 +1,6 @@
 #include "notification_service.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 void NotificationService::info(const QString& header, const QString& message)

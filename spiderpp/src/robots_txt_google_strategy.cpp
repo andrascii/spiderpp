@@ -1,7 +1,7 @@
 #include "robots_txt_google_strategy.h"
 #include "meta_robots_helpers.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 std::pair<bool, UserAgentType> RobotsTxtGoogleStrategy::isUrlAllowed(const MetaRobotsFlagsSet& metaRobotsFlags, UserAgentType userAgentType) const

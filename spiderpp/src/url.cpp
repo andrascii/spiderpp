@@ -1,6 +1,6 @@
 #include "url.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 Url::Url(const QUrl& url)

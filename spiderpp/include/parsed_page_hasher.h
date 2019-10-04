@@ -3,7 +3,7 @@
 #include "parsed_page.h"
 #include "page_parser_helpers.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct IParsedPageHasher

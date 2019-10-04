@@ -44,11 +44,11 @@ QString correctedXPath(const QString& xPath)
 	return "$doc" + result;
 }
 
-QString evaluateXPath(const QString& xpath, CrawlerEngine::IHtmlParser* parser)
+QString evaluateXPath(const QString& xpath, spiderpp::IHtmlParser* parser)
 {
 	QXmlQuery xmlQuery(QXmlQuery::XQuery10);
 
-	CrawlerEngine::HtmlNodeModel model(xmlQuery.namePool(), parser);
+	spiderpp::HtmlNodeModel model(xmlQuery.namePool(), parser);
 
 	// TODO: somehove reuse model
 	QXmlNodeModelIndex startNode = model.rootIndex();
@@ -62,7 +62,7 @@ QString evaluateXPath(const QString& xpath, CrawlerEngine::IHtmlParser* parser)
 		
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 XPathParser::XPathParser(IHtmlParser* htmlParser, const CrawlerOptionsData& options)

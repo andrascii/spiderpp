@@ -7,7 +7,7 @@
 #include "sequenced_data_collection_types.h"
 #include "worker_result.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct LinksToThisResourceChanges;

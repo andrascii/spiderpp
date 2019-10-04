@@ -3,7 +3,7 @@
 #include "gumbo.h"
 #include "ihtml_node.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class GumboHtmlNode final : public IHtmlNode

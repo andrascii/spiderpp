@@ -100,7 +100,7 @@ public:
 		: m_useCount(1)
 	{
 	}
-	
+
 	virtual ~cp_counted_base() = default;
 
 	virtual void dispose() = 0;
@@ -347,14 +347,6 @@ public:
 			throw;
 		}
 	}
-
-#if __cplusplus < 201402L
-	template <typename Y>
-	explicit cp_count(std::auto_ptr<Y>& r)
-		: _cp_counted(new sp_counted_impl_p<Y>(r.release()))
-	{
-	}
-#endif
 
 	template <typename Y, typename D>
 	explicit cp_count(std::unique_ptr<Y, D>& r)

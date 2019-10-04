@@ -1,6 +1,6 @@
 #include "xpath_helpers.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 	
 QString XPathHelpers::evaluateXPath(const QString& xml, const QString& query, const QString& defaultNamespace)

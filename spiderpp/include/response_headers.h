@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class ResponseHeaders final
@@ -30,4 +30,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::ResponseHeaders)
+Q_DECLARE_METATYPE(spiderpp::ResponseHeaders)

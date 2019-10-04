@@ -4,7 +4,7 @@
 #include "crawler_options.h"
 #include "parsed_page.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct LinkInfo;

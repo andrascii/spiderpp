@@ -1,7 +1,7 @@
 #include "meta_robots_helpers.h"
 #include "robots_txt_tokenizer.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 namespace

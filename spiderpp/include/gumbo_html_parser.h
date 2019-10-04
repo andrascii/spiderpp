@@ -4,7 +4,7 @@
 #include "ihtml_parser.h"
 #include "gumbo_html_node.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 enum class ResourceSource;

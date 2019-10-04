@@ -2,7 +2,7 @@
 
 #include "ihtml_node.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class IHtmlParser;

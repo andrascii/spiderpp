@@ -6,7 +6,7 @@
 #include "ipc_socket.h"
 #include "url.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class TakeScreenshotRequest;

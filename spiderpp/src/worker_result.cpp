@@ -1,6 +1,6 @@
 #include "worker_result.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 WorkerResult::WorkerResult()

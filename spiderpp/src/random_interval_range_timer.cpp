@@ -1,6 +1,6 @@
 #include "random_interval_range_timer.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 RandomIntervalRangeTimer::RandomIntervalRangeTimer(QObject* parent)

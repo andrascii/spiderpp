@@ -10,7 +10,7 @@ const char s_endOfHeaderMarkString[] = "\r\n";
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 void ResponseHeaders::addHeaderValue(const std::pair<QString, QString>& headerValue)

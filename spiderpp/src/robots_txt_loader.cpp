@@ -4,7 +4,7 @@
 #include "download_response.h"
 #include "url.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 RobotsTxtLoader::RobotsTxtLoader(QObject* parent)
@@ -71,7 +71,7 @@ QObject* RobotsTxtLoader::qobject()
 	return this;
 }
 
-CrawlerEngine::Url RobotsTxtLoader::robotsTxtUrl() const
+spiderpp::Url RobotsTxtLoader::robotsTxtUrl() const
 {
 	return !m_hopsChain.empty() ? m_hopsChain.lastHop().url() : Url();
 }

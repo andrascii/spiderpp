@@ -3,7 +3,7 @@
 #include "icrawler_options.h"
 #include "user_agent_type.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 constexpr size_t c_extractorCount = 10;
@@ -569,4 +569,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::CrawlerOptionsData)
+Q_DECLARE_METATYPE(spiderpp::CrawlerOptionsData)

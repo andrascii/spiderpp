@@ -4,11 +4,11 @@
 namespace
 {
 
-CrawlerEngine::ThreadManager* s_threadManager = nullptr;
+spiderpp::ThreadManager* s_threadManager = nullptr;
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 ThreadManager::~ThreadManager()
@@ -57,7 +57,7 @@ void ThreadManager::deleteAllLater(const QList<QObject*>& objects)
 	}
 }
 
-CrawlerEngine::ThreadManager& ThreadManager::instance()
+spiderpp::ThreadManager& ThreadManager::instance()
 {
 	if (!s_threadManager)
 	{

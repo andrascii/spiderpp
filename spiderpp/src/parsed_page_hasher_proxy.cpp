@@ -1,6 +1,6 @@
 #include "parsed_page_hasher_proxy.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 ParsedPageHasherProxy::ParsedPageHasherProxy(IParsedPageHasher* hasher)

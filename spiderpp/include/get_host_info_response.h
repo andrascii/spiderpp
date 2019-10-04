@@ -2,7 +2,7 @@
 
 #include "iresponse.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct GetHostInfoResponse : IResponse

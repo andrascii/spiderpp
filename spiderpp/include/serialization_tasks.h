@@ -3,7 +3,7 @@
 #include "serializer.h"
 #include "task_request.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct SerializationTaskResponseResult : public TaskResponseResult

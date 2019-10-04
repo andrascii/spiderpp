@@ -3,7 +3,7 @@
 #include "page_parser_helpers.h"
 #include "url.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 enum class DownloadRequestType
@@ -42,4 +42,4 @@ bool operator<(const CrawlerRequest& lhs, const CrawlerRequest& rhs);
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::DownloadRequestType)
+Q_DECLARE_METATYPE(spiderpp::DownloadRequestType)

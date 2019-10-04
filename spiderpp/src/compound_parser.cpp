@@ -1,6 +1,6 @@
 #include "compound_parser.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 void CompoundParser::parse(const ResponseHeaders& headers, ParsedPagePtr& page)

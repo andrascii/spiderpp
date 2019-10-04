@@ -1,6 +1,6 @@
 #include "handler_registry.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 HandlerRegistry& HandlerRegistry::instance()

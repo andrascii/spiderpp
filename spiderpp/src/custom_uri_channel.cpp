@@ -1,6 +1,6 @@
 #include "custom_uri_channel.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 static const QString s_uriChannelSharedMemoryKey("custom_uri_memory");

@@ -31,7 +31,7 @@
 #include "multi_request_page_loader.h"
 #include "qt_page_loader.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 Crawler* Crawler::s_instance = nullptr;
@@ -873,7 +873,6 @@ void Crawler::refreshPage(StorageType storageType, int index)
 	ASSERT(parsedPage->canRefresh());
 
 	INFOLOG << "Target storage size = " << m_sequencedDataCollection->storage(storageType)->size();
-
 	m_uniqueLinkStore->addRefreshUrl(parsedPage->url, DownloadRequestType::RequestTypeGet, storagesBeforeRemoving);
 
 	setState(StatePageRefresh);

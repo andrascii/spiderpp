@@ -1,6 +1,6 @@
 #include "crawler_shared_state.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 CrawlerSharedState::CrawlerSharedState()

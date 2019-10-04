@@ -3,7 +3,7 @@
 #include "iresponse.h"
 #include "requester.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class IRequest;

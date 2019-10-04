@@ -1,7 +1,7 @@
 #include "base_url_parser.h"
 #include "ihtml_parser.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 BaseUrlParser::BaseUrlParser(IHtmlParser* htmlParser)

@@ -1,7 +1,7 @@
 #include "word_count_parser.h"
 #include "ihtml_parser.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 

@@ -6,26 +6,26 @@
 namespace
 {
 
-const std::map<QString, CrawlerEngine::MetaRobotsItem> s_metaRobotsMapping
+const std::map<QString, spiderpp::MetaRobotsItem> s_metaRobotsMapping
 {
-	{ QString("all"), CrawlerEngine::MetaRobotsAll },
-	{ QString("noindex"), CrawlerEngine::MetaRobotsNoIndex },
-	{ QString("nofollow"), CrawlerEngine::MetaRobotsNoFollow },
-	{ QString("none"), CrawlerEngine::MetaRobotsNone },
-	{ QString("noarchive"),CrawlerEngine::MetaRobotsNoArchive },
-	{ QString("nosnippet"), CrawlerEngine::MetaRobotsNoSnippet },
-	{ QString("noodp"), CrawlerEngine::MetaRobotsNoODP },
-	{ QString("notranslate"), CrawlerEngine::MetaRobotsNoTranslate },
-	{ QString("noimageindex"), CrawlerEngine::MetaRobotsNoImageIndex },
-	{ QString("index"), CrawlerEngine::MetaRobotsIndex },
-	{ QString("follow"), CrawlerEngine::MetaRobotsFollow },
-	{ QString("noyaca"), CrawlerEngine::MetaRobotsNoYaCa },
-	{ QString("noydir"), CrawlerEngine::MetaRobotsNoYDir }
+	{ QString("all"), spiderpp::MetaRobotsAll },
+	{ QString("noindex"), spiderpp::MetaRobotsNoIndex },
+	{ QString("nofollow"), spiderpp::MetaRobotsNoFollow },
+	{ QString("none"), spiderpp::MetaRobotsNone },
+	{ QString("noarchive"),spiderpp::MetaRobotsNoArchive },
+	{ QString("nosnippet"), spiderpp::MetaRobotsNoSnippet },
+	{ QString("noodp"), spiderpp::MetaRobotsNoODP },
+	{ QString("notranslate"), spiderpp::MetaRobotsNoTranslate },
+	{ QString("noimageindex"), spiderpp::MetaRobotsNoImageIndex },
+	{ QString("index"), spiderpp::MetaRobotsIndex },
+	{ QString("follow"), spiderpp::MetaRobotsFollow },
+	{ QString("noyaca"), spiderpp::MetaRobotsNoYaCa },
+	{ QString("noydir"), spiderpp::MetaRobotsNoYDir }
 };
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 MetaParser::MetaParser(IHtmlParser* htmlParser)

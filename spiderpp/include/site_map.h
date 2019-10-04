@@ -2,7 +2,7 @@
 
 #include "parsed_page.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class ISequencedStorage;
@@ -99,6 +99,6 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::SiteMapChangeFreqTagMode);
-Q_DECLARE_METATYPE(CrawlerEngine::SitemapChangeFreq);
-Q_DECLARE_METATYPE(CrawlerEngine::SiteMapLastModTagMode);
+Q_DECLARE_METATYPE(spiderpp::SiteMapChangeFreqTagMode);
+Q_DECLARE_METATYPE(spiderpp::SitemapChangeFreq);
+Q_DECLARE_METATYPE(spiderpp::SiteMapLastModTagMode);

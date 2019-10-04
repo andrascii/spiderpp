@@ -2,7 +2,7 @@
 
 #include "inotification_service.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class NotificationService : public QObject, public INotificationService

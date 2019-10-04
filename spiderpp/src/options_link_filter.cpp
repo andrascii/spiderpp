@@ -2,7 +2,7 @@
 #include "parsed_page.h"
 #include  "page_parser_helpers.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 OptionsLinkFilter::OptionsLinkFilter(const CrawlerOptionsData& crawlerOptionsData, const RobotsTxtRules& robotsTxtRules)

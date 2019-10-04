@@ -3,7 +3,7 @@
 #include "meta_robots_helpers.h"
 
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 Url RobotsTxtYandexStrategy::cleanUrl(const Url& url, UserAgentType userAgentType, const RobotsTxtTokenizer& tokenizer) const

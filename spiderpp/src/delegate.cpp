@@ -1,6 +1,6 @@
 #include "delegate.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 void Delegate::clear()

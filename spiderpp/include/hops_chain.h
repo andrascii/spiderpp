@@ -3,7 +3,7 @@
 #include "url.h"
 #include "hop.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class HopsChain
@@ -44,4 +44,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::HopsChain)
+Q_DECLARE_METATYPE(spiderpp::HopsChain)

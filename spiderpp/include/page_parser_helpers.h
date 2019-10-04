@@ -2,7 +2,7 @@
 
 #include "parsed_page.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class PageParserHelpers

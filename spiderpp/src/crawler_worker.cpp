@@ -30,7 +30,7 @@ QVector<QRegExp> getRegExps(const QString& str)
 }
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 CrawlerWorker::CrawlerWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader* pageLoader)

@@ -2,9 +2,9 @@
 
 #include "parsed_page.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
-	
+
 
 class ICustomDataFeed;
 
@@ -58,4 +58,4 @@ inline QString dataFeedColumnValue(const ICustomDataFeedRow* dataFeedRow, int co
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::ICustomDataFeedRow*)
+Q_DECLARE_METATYPE(spiderpp::ICustomDataFeedRow*)

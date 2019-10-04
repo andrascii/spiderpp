@@ -4,7 +4,7 @@
 #include "crawler_request.h"
 #include "abstract_download_handler.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class RandomIntervalRangeTimer;

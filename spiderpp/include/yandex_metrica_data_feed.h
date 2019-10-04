@@ -3,7 +3,7 @@
 #include "icustom_data_feed.h"
 #include "requester_wrapper.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 class Requester;
 struct DownloadResponse;

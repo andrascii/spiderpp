@@ -2,7 +2,7 @@
 
 #include "ipage_parser.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class CompoundParser : public IPageParser

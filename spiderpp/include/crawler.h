@@ -8,7 +8,7 @@
 #include "web_host_info.h"
 #include "session.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class ISpecificLoader;
@@ -221,4 +221,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::CrawlingProgress)
+Q_DECLARE_METATYPE(spiderpp::CrawlingProgress)

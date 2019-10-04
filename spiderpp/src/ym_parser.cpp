@@ -14,7 +14,7 @@ QRegularExpression newYmIdentifierRegExp("ym\\s*\\(\\s*(\\d+)\\s*,\\s*['|\"]init
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 YmParser::YmParser(IHtmlParser* htmlParser, int counterNumber, StorageType targetStorageType)

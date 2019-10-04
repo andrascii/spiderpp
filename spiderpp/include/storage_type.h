@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 enum StorageType
@@ -140,4 +140,4 @@ inline StorageType operator++(StorageType value)
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::StorageType)
+Q_DECLARE_METATYPE(spiderpp::StorageType)

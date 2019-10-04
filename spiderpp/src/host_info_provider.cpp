@@ -8,7 +8,7 @@
 #include "download_request.h"
 #include "crawler_shared_state.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 HostInfoProvider::HostInfoProvider()

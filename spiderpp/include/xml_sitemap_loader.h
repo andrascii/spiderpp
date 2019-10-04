@@ -5,7 +5,7 @@
 #include "requester_wrapper.h"
 #include "url.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct DownloadResponse;

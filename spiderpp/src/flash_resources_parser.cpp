@@ -11,7 +11,7 @@ const QByteArray s_classIdAttributeValueToken = "clsid:D27CDB6E-AE6D-11cf-96B8-4
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 FlashResourcesParser::FlashResourcesParser(IHtmlParser* htmlParser)

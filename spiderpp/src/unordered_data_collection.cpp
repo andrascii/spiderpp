@@ -2,7 +2,7 @@
 #include "parsed_page_comparator.h"
 #include "sequenced_data_collection.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 UnorderedDataCollection::UnorderedDataCollection(QObject* parent)

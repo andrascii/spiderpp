@@ -8,7 +8,7 @@
 #include "worker_result.h"
 #include "icustom_data_feed.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class ISequencedStorage;

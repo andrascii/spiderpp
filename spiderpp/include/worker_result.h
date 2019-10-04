@@ -3,7 +3,7 @@
 #include "parsed_page.h"
 #include "crawler_request.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class WorkerResult final
@@ -34,4 +34,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::WorkerResult)
+Q_DECLARE_METATYPE(spiderpp::WorkerResult)

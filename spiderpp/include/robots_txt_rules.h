@@ -3,7 +3,7 @@
 #include "parsed_page.h"
 #include "icrawler_options.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class ISpecificLoader;
@@ -42,4 +42,4 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::RobotsTxtRules)
+Q_DECLARE_METATYPE(spiderpp::RobotsTxtRules)

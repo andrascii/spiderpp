@@ -1,7 +1,7 @@
 #pragma once
 #include "parsed_page.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 	
 struct LinksToThisResourceChanges
@@ -16,4 +16,4 @@ struct LinksToThisResourceChanges
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::LinksToThisResourceChanges)
+Q_DECLARE_METATYPE(spiderpp::LinksToThisResourceChanges)

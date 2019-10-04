@@ -1,7 +1,7 @@
 #include "message.h"
 #include "requester.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 Message Message::undefinedMessage()

@@ -3,7 +3,7 @@
 #include "robots_txt_rules.h"
 #include "meta_robots_helpers.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 bool RobotsTxtBaseStrategy::isUrlAllowed(const Url& url,

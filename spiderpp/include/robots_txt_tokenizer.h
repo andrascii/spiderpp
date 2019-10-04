@@ -3,7 +3,7 @@
 #include "url.h"
 #include "icrawler_options.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 enum class RobotsTxtToken

@@ -2,7 +2,7 @@
 #include "handler_registry.h"
 #include "thread_message_dispatcher.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 Requester::Requester(const IRequest& request)

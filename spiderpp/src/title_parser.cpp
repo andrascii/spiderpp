@@ -1,7 +1,7 @@
 #include "title_parser.h"
 #include "ihtml_parser.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 TitleParser::TitleParser(IHtmlParser* htmlParser)

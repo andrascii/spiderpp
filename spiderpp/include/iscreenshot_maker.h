@@ -2,7 +2,7 @@
 #ifdef ENABLE_SCREENSHOTS
 #include "requester.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class IScreenshotMaker

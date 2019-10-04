@@ -2,7 +2,7 @@
 
 #include "robots_txt_yandex_strategy.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 // https://help.mail.ru/webmaster/indexing/robots.txt/rules/user-agent

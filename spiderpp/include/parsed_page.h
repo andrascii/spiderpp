@@ -5,7 +5,7 @@
 #include "storage_type.h"
 #include "user_agent_type.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct ParsedPage;
@@ -235,6 +235,6 @@ using ParsedPagePtr = std::shared_ptr<ParsedPage>;
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::ParsedPagePtr)
-Q_DECLARE_METATYPE(std::vector<CrawlerEngine::ParsedPagePtr>)
-Q_DECLARE_METATYPE(CrawlerEngine::ParsedPageWeakPtr)
+Q_DECLARE_METATYPE(spiderpp::ParsedPagePtr)
+Q_DECLARE_METATYPE(std::vector<spiderpp::ParsedPagePtr>)
+Q_DECLARE_METATYPE(spiderpp::ParsedPageWeakPtr)
