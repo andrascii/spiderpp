@@ -6,7 +6,7 @@
 namespace
 {
 
-using namespace CrawlerEngine;
+using namespace spiderpp;
 
 const QMap<StorageType, ErrorCategory::ErrorCategoryLevel> s_storageTypeToLevel
 {
@@ -86,7 +86,7 @@ const QMap<StorageType, ErrorCategory::ErrorCategoryLevel> s_storageTypeToLevel
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 ErrorCategory::ErrorCategoryLevel ErrorCategory::level(StorageType type) noexcept

@@ -3,7 +3,7 @@
 #include "page_parser_helpers.h"
 #include "url.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 enum class DownloadRequestType

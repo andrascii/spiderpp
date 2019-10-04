@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 enum class ExtractionType
@@ -13,4 +13,4 @@ enum class ExtractionType
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::ExtractionType);
+Q_DECLARE_METATYPE(spiderpp::ExtractionType);

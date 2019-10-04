@@ -2,7 +2,7 @@
 
 #include "hops_chain.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class IHttpClient

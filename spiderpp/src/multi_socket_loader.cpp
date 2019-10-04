@@ -6,7 +6,7 @@
 namespace
 {
 
-using namespace CrawlerEngine;
+using namespace spiderpp;
 
 constexpr size_t c_second = 1000;
 
@@ -34,7 +34,7 @@ void notifyAboutTransferProgress(MultiSocketLoader* multiSocketLoader,
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 MultiSocketLoader* MultiSocketLoader::s_instance = nullptr;

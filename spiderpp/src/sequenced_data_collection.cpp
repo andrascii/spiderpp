@@ -4,7 +4,7 @@
 #include "crawler_shared_state.h"
 #include "isequenced_storage.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 SequencedDataCollection::SequencedDataCollection(const UnorderedDataCollection* collection)

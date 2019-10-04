@@ -4,7 +4,7 @@
 #include "parsed_page.h"
 #include "crawler_options.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct DownloadResponse;

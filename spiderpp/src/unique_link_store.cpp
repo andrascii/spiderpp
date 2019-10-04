@@ -2,7 +2,7 @@
 #include "service_locator.h"
 #include "common_constants.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 UniqueLinkStore::IncrementGuardExt::IncrementGuardExt(IncrementFunc inc,

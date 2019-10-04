@@ -5,7 +5,7 @@
 #include "abstract_download_handler.h"
 #include "download_request.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class ResponseHeaders;

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 enum class ResponseType
@@ -20,16 +20,16 @@ enum class ResponseType
 };
 
 #define DECLARE_RESPONSE_STATIC_TYPE(Type) \
-	static CrawlerEngine::ResponseType responseStaticType();
+	static spiderpp::ResponseType responseStaticType();
 
 #define DEFINE_RESPONSE_STATIC_TYPE(ObjectType, Type) \
-	CrawlerEngine::ResponseType ObjectType::responseStaticType() \
+	spiderpp::ResponseType ObjectType::responseStaticType() \
 	{ \
 		return Type; \
 	}
 
 #define DEFINE_RESPONSE_STATIC_TYPE_IN_CLASS(Type) \
-	static CrawlerEngine::ResponseType responseStaticType() \
+	static spiderpp::ResponseType responseStaticType() \
 	{ \
 		return Type; \
 	}

@@ -8,7 +8,7 @@
 #include "robots_txt_msn_strategy.h"
 #include "robots_txt_google_strategy.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 RobotsTxtRules::RobotsTxtRules()

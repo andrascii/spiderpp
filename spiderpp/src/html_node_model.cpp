@@ -4,7 +4,7 @@
 namespace 
 {
 
-using namespace CrawlerEngine;
+using namespace spiderpp;
 
 QMap<IHtmlNode::TagId, QString> s_tagToName
 {
@@ -192,7 +192,7 @@ int s_attributeId = 1;
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 HtmlNodeModel::HtmlNodeModel(QXmlNamePool pool, const IHtmlParser* parser)

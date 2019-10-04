@@ -3,7 +3,7 @@
 #include "serial_number_data.h"
 #include "requester.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class ILicenseService

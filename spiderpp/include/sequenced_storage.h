@@ -5,7 +5,7 @@
 
 #undef max
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class SequencedStorage : public ISequencedStorage

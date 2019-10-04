@@ -1,6 +1,6 @@
 #include "sequenced_storage.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 bool SequencedStorage::containsPointersWithUseCountGreaterThanOne() const noexcept

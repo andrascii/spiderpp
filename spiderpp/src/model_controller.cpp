@@ -7,7 +7,7 @@
 namespace
 {
 
-using namespace CrawlerEngine;
+using namespace spiderpp;
 
 struct EmitBlocker final
 {
@@ -40,8 +40,8 @@ void assignIf(IterOut firstOut, IterOut secondOut, IterIn firstIn, IterIn second
 
 ParsedPagePtr mergePage(ParsedPagePtr existingPage, ParsedPagePtr incomingParsedPage)
 {
-	CrawlerEngine::ParsedPage* existingPageRawPtr = existingPage.get();
-	CrawlerEngine::ParsedPage* newParsedPage = incomingParsedPage.get();
+	spiderpp::ParsedPage* existingPageRawPtr = existingPage.get();
+	spiderpp::ParsedPage* newParsedPage = incomingParsedPage.get();
 
 	if (!existingPage || existingPageRawPtr == newParsedPage)
 	{
@@ -77,12 +77,12 @@ void checkResourceLinks(ParsedPagePtr page)
 	QSet<QString> linksToThisPage;
 	QSet<QString> linksOnThisPage;
 
-	for (const CrawlerEngine::ResourceLink& link : page->linksToThisPage)
+	for (const spiderpp::ResourceLink& link : page->linksToThisPage)
 	{
 		linksToThisPage.insert(link.resource.lock()->url.toDisplayString());
 	}
 
-	for (const CrawlerEngine::ResourceLink& link : page->linksOnThisPage)
+	for (const spiderpp::ResourceLink& link : page->linksOnThisPage)
 	{
 		linksOnThisPage.insert(link.resource.lock()->url.toDisplayString());
 	}
@@ -99,7 +99,7 @@ bool successfulCode(const ParsedPagePtr& page)
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 ModelController::ModelController()

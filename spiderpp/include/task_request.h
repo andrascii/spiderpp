@@ -2,7 +2,7 @@
 
 #include "irequest.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct TaskResponseResult;

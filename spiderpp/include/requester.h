@@ -4,7 +4,7 @@
 #include "iresponse.h"
 #include "delegate.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 //! A request handler can send you a response only if the requester at the moment of sending is alive
@@ -80,5 +80,5 @@ using RequesterWeakPtr = std::weak_ptr<Requester>;
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::RequesterSharedPtr);
-Q_DECLARE_METATYPE(CrawlerEngine::Requester)
+Q_DECLARE_METATYPE(spiderpp::RequesterSharedPtr);
+Q_DECLARE_METATYPE(spiderpp::Requester)

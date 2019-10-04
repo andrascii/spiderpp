@@ -3,7 +3,7 @@
 #include "icustom_data_feed.h"
 #include "parsed_page.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class TestDataFeedRow : public ICustomDataFeedRow

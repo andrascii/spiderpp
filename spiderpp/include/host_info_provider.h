@@ -4,7 +4,7 @@
 #include "requester_wrapper.h"
 #include "ihost_info_provider.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 struct DownloadResponse;
 struct GetHostInfoResponse;

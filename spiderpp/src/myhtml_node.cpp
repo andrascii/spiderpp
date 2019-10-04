@@ -4,7 +4,7 @@
 namespace
 {
 
-using namespace CrawlerEngine;
+using namespace spiderpp;
 
 const QMap<std::size_t, IHtmlNode::TagId> s_tagIdMapping
 {
@@ -163,7 +163,7 @@ const QMap<std::size_t, IHtmlNode::TagId> s_tagIdMapping
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 MyHtmlAttribute::MyHtmlAttribute(myhtml_tree_attr_t* attr)

@@ -3,7 +3,7 @@
 #include "irequest.h"
 #include "url.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class TakeScreenshotRequest : public IRequest

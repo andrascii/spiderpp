@@ -1,6 +1,6 @@
 #include "hop.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 Hop::Hop(const Url& url, const Url& redirectUrl, Common::StatusCode statusCode, const QByteArray& body, const ResponseHeaders& responseHeaders, int elapsedTime)

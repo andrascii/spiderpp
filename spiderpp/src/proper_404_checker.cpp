@@ -5,7 +5,7 @@
 #include "download_response.h"
 #include "thread_message_dispatcher.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 Proper404Checker::Proper404Checker()

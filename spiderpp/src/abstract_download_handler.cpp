@@ -21,7 +21,7 @@ constexpr int c_defaultParallelTransferCount = 24;
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 AbstractDownloadHandler::AbstractDownloadHandler()

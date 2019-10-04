@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 // TODO: !!!make it thread safe!!!

@@ -5,7 +5,7 @@
 #include "storage_type.h"
 #include "user_agent_type.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct ParsedPage;

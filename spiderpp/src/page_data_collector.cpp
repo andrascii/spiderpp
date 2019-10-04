@@ -17,7 +17,7 @@
 #include "ga_parser.h"
 #include "xpath_parser.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 PageDataCollector::PageDataCollector(QObject* parent)

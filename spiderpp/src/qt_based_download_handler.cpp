@@ -11,7 +11,7 @@
 #include "helpers.h"
 #include "finally.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 QtBasedDownloadHandler::QtBasedDownloadHandler()

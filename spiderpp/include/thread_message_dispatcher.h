@@ -2,7 +2,7 @@
 
 #include "message_queue.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class IResponse;

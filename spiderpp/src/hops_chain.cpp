@@ -1,6 +1,6 @@
 #include "hops_chain.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 void HopsChain::addHop(const Hop& hop)

@@ -8,7 +8,7 @@
 #include "options_link_filter.h"
 #include <qobjectdefs.h>
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class IWorkerPageLoader;

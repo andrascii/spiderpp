@@ -4,7 +4,7 @@
 #include "thread_message_dispatcher.h"
 #include "task_response.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 TaskProcessor::TaskProcessor()

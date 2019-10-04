@@ -1,6 +1,6 @@
 #include "host_info.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 HostInfo::HostInfo(const QByteArray& webpage)

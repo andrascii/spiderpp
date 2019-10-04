@@ -2,7 +2,7 @@
 #include "isequenced_storage.h"
 #include "unique_link_store.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 namespace
@@ -611,7 +611,7 @@ void Serializer::loadFromStream(QIODevice& device)
 	loadFromXmlStream(device);
 }
 
-const std::vector<ParsedPagePtr>& CrawlerEngine::Serializer::pages() const
+const std::vector<ParsedPagePtr>& spiderpp::Serializer::pages() const
 {
 	return m_deserializedPages;
 }
@@ -621,7 +621,7 @@ const std::vector<CrawlerRequest>& Serializer::crawledLinks() const
 	return m_crawledLinks;
 }
 
-const std::vector<CrawlerRequest>& CrawlerEngine::Serializer::pendingLinks() const
+const std::vector<CrawlerRequest>& spiderpp::Serializer::pendingLinks() const
 {
 	return m_pendingLinks;
 }

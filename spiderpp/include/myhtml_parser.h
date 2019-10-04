@@ -4,7 +4,7 @@
 #include "myhtml/api.h"
 #include "myhtml_node.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 enum class ResourceSource;

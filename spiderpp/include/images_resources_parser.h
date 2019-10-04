@@ -2,7 +2,7 @@
 
 #include "compound_parser.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class IHtmlParser;

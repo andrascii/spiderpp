@@ -12,7 +12,7 @@
 namespace
 {
 
-using namespace CrawlerEngine;
+using namespace spiderpp;
 
 QString printReceiveState(IWorkerPageLoader::ReceiveState state)
 {
@@ -30,7 +30,7 @@ QString printReceiveState(IWorkerPageLoader::ReceiveState state)
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 MultiRequestPageLoader::MultiRequestPageLoader(UniqueLinkStore* uniqueLinkStore, QObject* parent)

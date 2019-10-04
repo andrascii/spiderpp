@@ -4,7 +4,7 @@
 #include "response_headers.h"
 #include "status_code.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class Hop final

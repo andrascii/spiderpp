@@ -2,7 +2,7 @@
 
 #include "itask_processor.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 	
 class TaskProcessor: public QObject, public ITaskProcessor

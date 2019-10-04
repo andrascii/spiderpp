@@ -1,6 +1,6 @@
 #include "page_parser_helpers.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 Url PageParserHelpers::resolveRelativeUrl(const Url& relativeUrl, const Url& baseUrl)

@@ -3,7 +3,7 @@
 #include "ipage_parser.h"
 #include "gumbo.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class IHtmlParser;

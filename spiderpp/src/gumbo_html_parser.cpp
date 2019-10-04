@@ -55,7 +55,7 @@ bool checkAttribute(const GumboNode* node, const char* attribute, const char* ex
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 GumboHtmlParser::GumboHtmlParser() 

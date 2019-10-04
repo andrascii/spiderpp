@@ -3,7 +3,7 @@
 #include "ihtml_parser.h"
 #include "parsed_page.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 FramesDetectorParser::FramesDetectorParser(IHtmlParser* htmlParser)

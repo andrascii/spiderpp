@@ -1,6 +1,6 @@
 #include "serialization_tasks.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 SerializationTask::SerializationTask(std::unique_ptr<Serializer> serializer, const QString& fileName)
 	: m_result(std::make_unique<SerializationTaskResponseResult>(std::move(serializer)))

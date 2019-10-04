@@ -7,7 +7,7 @@ const QString s_defaultSessionName = "unnamed_project";
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 Session::Session(State state, const QString& name, QObject* parent)

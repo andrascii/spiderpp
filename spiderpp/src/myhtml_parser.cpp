@@ -147,7 +147,7 @@ const QMap<QByteArray, myencoding_list> s_stringToEnumEncoding =
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 MyHtmlParser::MyHtmlParser()

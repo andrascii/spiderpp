@@ -1,6 +1,6 @@
 #include "crawler_options.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 CrawlerOptions::CrawlerOptions(QObject* parent)

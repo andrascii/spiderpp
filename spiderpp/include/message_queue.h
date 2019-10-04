@@ -2,7 +2,7 @@
 
 #include "message.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class MessageQueue

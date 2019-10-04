@@ -178,7 +178,7 @@ bool findGtagCounter(const QString& javaScriptCode, const QString& counterNumber
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 GaParser::GaParser(IHtmlParser* htmlParser, const QString& counterNumber, StorageType targetStorageType)
 	: m_htmlParser(htmlParser)

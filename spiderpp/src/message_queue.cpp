@@ -1,6 +1,6 @@
 #include "message_queue.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 void MessageQueue::addMessage(const Message& message)

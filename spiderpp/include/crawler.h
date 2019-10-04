@@ -8,7 +8,7 @@
 #include "web_host_info.h"
 #include "session.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class ISpecificLoader;

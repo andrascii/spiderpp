@@ -2,7 +2,7 @@
 
 #include "idownload_handler.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct DownloadResponse;

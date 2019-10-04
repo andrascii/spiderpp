@@ -3,7 +3,7 @@
 #include "ihtml_node.h"
 #include "myhtml/api.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class MyHtmlAttribute final : public IHtmlAttribute

@@ -3,7 +3,7 @@
 #include "parsed_page.h"
 #include "icrawler_options.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class ISpecificLoader;

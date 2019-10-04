@@ -3,7 +3,7 @@
 namespace
 {
 
-using namespace CrawlerEngine;
+using namespace spiderpp;
 
 const QMap<int, IHtmlNode::TagId> s_tagIdMapping
 {
@@ -173,7 +173,7 @@ const QMap<int, IHtmlNode::NodeType> s_nodeTypeMapping
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 GumboHtmlNode::GumboHtmlNode(GumboNode* node)
@@ -341,7 +341,7 @@ std::vector<IHtmlNodeCountedPtr> GumboHtmlNode::matchSubNodesInDepth(TagId tagId
 	return result;
 }
 
-std::vector<CrawlerEngine::IHtmlNodeCountedPtr> GumboHtmlNode::matchSubNodesInDepth(const std::function<bool(const IHtmlNode&)>& predicate) const
+std::vector<spiderpp::IHtmlNodeCountedPtr> GumboHtmlNode::matchSubNodesInDepth(const std::function<bool(const IHtmlNode&)>& predicate) const
 {
 	std::vector<IHtmlNodeCountedPtr> result;
 	matchSubNodesInDepthHelper(result, m_node, predicate);

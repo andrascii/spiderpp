@@ -6,7 +6,7 @@
 #include "helpers.h"
 #include "thread_message_dispatcher.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 MultiSocketDownloadHandler::MultiSocketDownloadHandler()

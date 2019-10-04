@@ -4,7 +4,7 @@
 #include "parsed_page.h"
 #include "response_headers.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class IPageParser

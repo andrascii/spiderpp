@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 enum class ExtractorRuleType
@@ -12,4 +12,4 @@ enum class ExtractorRuleType
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::ExtractorRuleType);
+Q_DECLARE_METATYPE(spiderpp::ExtractorRuleType);

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 enum class UserAgentType
@@ -20,4 +20,4 @@ enum class UserAgentType
 
 }
 
-Q_DECLARE_METATYPE(CrawlerEngine::UserAgentType);
+Q_DECLARE_METATYPE(spiderpp::UserAgentType);

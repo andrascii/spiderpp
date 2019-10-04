@@ -1,7 +1,7 @@
 #pragma once
 #include "parsed_page.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 	
 struct LinksToThisResourceChanges

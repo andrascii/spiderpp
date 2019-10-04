@@ -2,7 +2,7 @@
 #include "page_parser_helpers.h"
 #include "ihtml_parser.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 	
 OtherResourcesParser::OtherResourcesParser(IHtmlParser* htmlParser)

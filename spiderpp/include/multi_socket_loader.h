@@ -11,7 +11,7 @@ enum class StatusCode;
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class Url;

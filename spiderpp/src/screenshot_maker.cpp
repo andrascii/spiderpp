@@ -16,7 +16,7 @@ const QString s_screenshotMakerChannelName("screenshot_maker_channel");
 
 }
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 using namespace Common;

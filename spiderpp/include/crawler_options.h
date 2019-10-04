@@ -3,7 +3,7 @@
 #include "icrawler_options.h"
 #include "user_agent_type.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 constexpr size_t c_extractorCount = 10;

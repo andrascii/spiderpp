@@ -2,7 +2,7 @@
 
 #include "storage_type.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class ErrorCategory

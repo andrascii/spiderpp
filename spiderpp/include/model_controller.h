@@ -6,7 +6,7 @@
 #include "storage_type.h"
 #include "worker_result.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class UnorderedDataCollection;

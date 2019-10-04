@@ -3,7 +3,7 @@
 #include "url.h"
 #include "hop.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class HopsChain

@@ -5,7 +5,7 @@
 #include "download_request.h"
 #include "hops_chain.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 struct CrawlerOptionsData;

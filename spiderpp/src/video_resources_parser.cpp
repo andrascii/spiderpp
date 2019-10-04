@@ -3,7 +3,7 @@
 #include "data_resources_parser.h"
 #include "ihtml_parser.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 VideoResourcesParser::VideoResourcesParser(IHtmlParser* htmlParser)

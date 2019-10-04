@@ -3,7 +3,7 @@
 #include "sequenced_data_collection.h"
 #include "isequenced_storage.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 namespace

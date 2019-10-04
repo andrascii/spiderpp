@@ -5,7 +5,7 @@
 #include "download_response.h"
 #include "crawler_shared_state.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 YandexMetricaAuthenticator::YandexMetricaAuthenticator(QObject* parent)
 	: QObject(parent)

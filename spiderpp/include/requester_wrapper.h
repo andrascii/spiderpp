@@ -4,7 +4,7 @@
 #include "requester.h"
 #include "meta_helpers.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 class RequesterWrapper

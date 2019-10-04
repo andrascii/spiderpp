@@ -6,7 +6,7 @@
 #include "crawler_request.h"
 #include "robots_txt_loader.h"
 
-namespace CrawlerEngine
+namespace spiderpp
 {
 
 XmlSitemapLoader::XmlSitemapLoader(RobotsTxtLoader* robotsTxtLoader, QObject* parent)
