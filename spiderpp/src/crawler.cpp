@@ -1,7 +1,6 @@
 #include "crawler.h"
 #include "unordered_data_collection.h"
 #include "sequenced_data_collection.h"
-#include "model_controller.h"
 #include "crawler_worker.h"
 #include "robots_txt_rules.h"
 #include "robots_txt_loader.h"
@@ -23,9 +22,11 @@
 #include "helpers.h"
 #include "common_constants.h"
 #include "proper_404_checker.h"
+
 #ifdef ENABLE_SCREENSHOTS
 #include "screenshot_maker.h"
 #endif
+
 #include "icustom_data_feed.h"
 #include "multi_socket_download_handler.h"
 #include "multi_request_page_loader.h"
@@ -45,7 +46,6 @@ Crawler::Crawler(QObject* parent)
 	: QObject(parent)
 	, m_robotsTxtLoader(new RobotsTxtLoader(this))
 	, m_xmlSitemapLoader(new XmlSitemapLoader(static_cast<RobotsTxtLoader*>(m_robotsTxtLoader), this))
-	, m_modelController(nullptr)
 	, m_uniqueLinkStore(nullptr)
 	, m_options(new CrawlerOptions(this))
 	, m_theradCount(0)
@@ -114,8 +114,6 @@ void Crawler::setDownloaderType(DownloaderType type)
 
 void Crawler::initialize()
 {
-	m_modelController = new ModelController;
-
 	initSequencedDataCollection();
 
 	m_downloader = createDownloader();
@@ -128,10 +126,10 @@ void Crawler::initialize()
 	ThreadManager& threadManager = ThreadManager::instance();
 
 	threadManager.moveObjectToThread(m_downloader->qobject(), "DownloaderThread");
-	threadManager.moveObjectToThread(m_modelController, "BackgroundThread");
 	threadManager.moveObjectToThread(createHostInfoProvider()->qobject(), "BackgroundThread");
 	threadManager.moveObjectToThread(createTaskProcessor()->qobject(), "SerializerThread");
 	threadManager.moveObjectToThread(new Proper404Checker, "BackgroundThread");
+
 #ifdef ENABLE_SCREENSHOTS
 	threadManager.moveObjectToThread(createScreenshotMaker()->qobject(), "BackgroundThread");
 #endif
@@ -141,14 +139,8 @@ void Crawler::initialize()
 	for (unsigned i = 0; i < workerCount(); ++i)
 	{
 		m_workers.push_back(new CrawlerWorker(m_uniqueLinkStore, createWorkerPageLoader()));
-
-		VERIFY(connect(m_workers.back(), SIGNAL(workerResult(WorkerResult)),
-			m_modelController, SLOT(handleWorkerResult(WorkerResult)), Qt::QueuedConnection));
-
 		threadManager.moveObjectToThread(m_workers.back(), QString("CrawlerWorkerThread#%1").arg(i).toLatin1());
 	}
-
-	VERIFY(connect(m_modelController, &ModelController::refreshPageDone, this, &Crawler::onRefreshPageDone, Qt::QueuedConnection));
 }
 
 void Crawler::clearData()
@@ -168,8 +160,8 @@ void Crawler::clearDataImpl()
 {
 	m_crawlingFinished = false;
 	CrawlerSharedState::instance()->clear();
-	VERIFY(QMetaObject::invokeMethod(m_modelController, "clearData", Qt::BlockingQueuedConnection));
 	m_uniqueLinkStore->clear();
+
 	if (m_session != nullptr && m_session->hasCustomName())
 	{
 		m_session->setState(Session::StateUnsaved);
@@ -367,12 +359,7 @@ void Crawler::onCrawlingSessionInitialized()
 	}
 
 	setState(StateWorking);
-
 	initSessionIfNeeded();
-
-	VERIFY(QMetaObject::invokeMethod(m_modelController, "setWebCrawlerOptions",
-		Qt::BlockingQueuedConnection, Q_ARG(const CrawlerOptionsData&, m_options->data())));
-
 	setUserAgent(m_options->userAgent());
 
 	if (m_options->useProxy())
@@ -551,8 +538,6 @@ void Crawler::onDeserializationTaskDone(Requester* requester, const TaskResponse
 					{
 						++crawledLinksCount;
 					}
-
-					m_modelController->data()->addParsedPage(page, static_cast<int>(i), turnaround);
 				}
 			}
 		}
@@ -608,35 +593,18 @@ void Crawler::onHostInfoResponse(Requester*, const GetHostInfoResponse& response
 
 void Crawler::onSerializationReadyToBeStarted()
 {
+	ASSERT(!"This method is invalid. We need to store data in file only for unique link store!");
 	ASSERT(state() == StateSerializaton);
 
 	const SequencedDataCollection* sequencedCollection = sequencedDataCollection();
-
 	const ISequencedStorage* storage = sequencedCollection->storage(StorageType::CrawledUrlStorageType);
-	std::vector<ParsedPagePtr> pendingPages = m_modelController->data()->allParsedPages(StorageType::PendingResourcesStorageType);
-	std::vector<ParsedPagePtr> nonLoadingPages = m_modelController->data()->allParsedPages(StorageType::AllOtherResourcesStorageType);
-
-	const int pagesCount = storage->size() + static_cast<int>(pendingPages.size());
 
 	std::vector<ParsedPage*> pages;
-	pages.reserve(pagesCount);
 
 	for (int i = 0; i < storage->size(); ++i)
 	{
 		const ParsedPage* page = (*storage)[i];
 		pages.push_back(const_cast<ParsedPage*>(page));
-	}
-
-	for (size_t i = 0; i < pendingPages.size(); ++i)
-	{
-		ParsedPage* page = pendingPages[i].get();
-		pages.push_back(page);
-	}
-
-	for (size_t i = 0; i < nonLoadingPages.size(); ++i)
-	{
-		ParsedPage* page = nonLoadingPages[i].get();
-		pages.push_back(page);
 	}
 
 	std::vector<CrawlerRequest> pendingUrls;
@@ -658,6 +626,7 @@ void Crawler::onSerializationReadyToBeStarted()
 
 void Crawler::onDeserializationReadyToBeStarted()
 {
+	ASSERT(!"This method is invalid. We need to load data from file only for unique link store!");
 	ASSERT(state() == StateDeserializaton);
 
 	clearDataImpl();
@@ -689,8 +658,6 @@ void Crawler::tryToLoadCrawlingDependencies()
 
 void Crawler::initSequencedDataCollection()
 {
-	m_sequencedDataCollection = std::make_unique<SequencedDataCollection>(m_modelController->data());
-
 	m_sequencedDataCollection->initialize();
 
 	Common::Helpers::connectSignalsToMetaMethod(
@@ -699,11 +666,6 @@ void Crawler::initSequencedDataCollection()
 		this,
 		Common::Helpers::metaMethodOfSlot(this, "onSequencedDataCollectionChanged()")
 	);
-
-	// jus for test
-	// addCustomDataFeed(new TestDataFeed());
-
-	// addCustomDataFeed(new YandexMetricaDataFeed());
 
 	setCustomDataFeedsToSequencedDataCollection();
 }
@@ -899,6 +861,8 @@ QString Crawler::currentCrawledUrl() const noexcept
 
 void Crawler::refreshPage(StorageType storageType, int index)
 {
+	ASSERT(!"This method must work without pausing the spiderpp. Also we do not need an index. For plain spider we can accept just a URL to reload");
+
 	INFOLOG << "Refresh page. index = " << index << "; storageType = " << static_cast<int>(storageType) << ";";
 
 	if (!readyForRefreshPage())
@@ -915,9 +879,6 @@ void Crawler::refreshPage(StorageType storageType, int index)
 	ASSERT(parsedPage->canRefresh());
 
 	INFOLOG << "Target storage size = " << m_sequencedDataCollection->storage(storageType)->size();
-
-	VERIFY(QMetaObject::invokeMethod(m_modelController, "preparePageForRefresh",
-		Qt::BlockingQueuedConnection, Q_ARG(ParsedPage*, parsedPage), Q_ARG(int, CrawlerEngine::CrawlerSharedState::instance()->turnaround())));
 
 	m_uniqueLinkStore->addRefreshUrl(parsedPage->url, DownloadRequestType::RequestTypeGet, storagesBeforeRemoving);
 

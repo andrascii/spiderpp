@@ -185,7 +185,6 @@ private:
 
 protected:
 	std::unique_ptr<SequencedDataCollection> m_sequencedDataCollection;
-	ModelController* m_modelController;
 
 private:
 	static Crawler* s_instance;
