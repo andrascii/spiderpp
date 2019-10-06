@@ -1,6 +1,5 @@
 #pragma once
 
-#include "robots_txt_rules.h"
 #include "crawler_options.h"
 #include "parsed_page.h"
 
@@ -12,7 +11,7 @@ struct LinkInfo;
 class OptionsLinkFilter
 {
 public:
-	OptionsLinkFilter(const CrawlerOptionsData& crawlerOptionsData, const RobotsTxtRules& robotsTxtRules);
+	OptionsLinkFilter(const CrawlerOptionsData& crawlerOptionsData, const cpprobotparser::RobotsTxtRules& robotsTxtRules);
 
 	const Url& startCrawlingPage() const noexcept;
 
@@ -25,7 +24,7 @@ private:
 
 private:
 	CrawlerOptionsData m_crawlerOptionsData;
-	RobotsTxtRules m_robotsTxtRules;
+	cpprobotparser::RobotsTxtRules m_robotsTxtRules;
 };
 
 }

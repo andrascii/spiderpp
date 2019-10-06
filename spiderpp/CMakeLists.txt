@@ -56,12 +56,16 @@ endif()
 
 message("CURL include headers directory: ${CURL_HEADERS_DIR}")
 
+add_dependencies(${SPIDERPP_LIB} ${CPPROBOTPARSER_LIB})
+
 include_directories(
 	${SPIDERPP_HEADERS_DIR}
 	${CURL_HEADERS_DIR}
 	${GUMBO_LIB_HEADERS_DIR}
 	${MYHTML_LIB_HEADERS_DIR}
 	${COMMON_LIB_HEADERS_DIR}
+	${CPPROBOTPARSER_INCLUDE_DIR}
+	${CPPROBOTPARSER_SINGLE_INCLUDE_DIR}
 	${Boost_INCLUDE_DIRS}
 	${CMAKE_CURRENT_BINARY_DIR}
 )
@@ -70,6 +74,7 @@ target_link_libraries(
 	${SPIDERPP_LIB}
 	${COMMON_LIB}
 	${GUMBO_LIB}
+	${CPPROBOTPARSER_LIB}
 	"${MyHtmlLibName}_static" # change this solution to that which is more reliable
 	${Boost_LIBRARIES}
 	${Boost_SYSTEM_LIBRARY}

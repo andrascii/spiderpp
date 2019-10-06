@@ -132,6 +132,10 @@ struct unary_function
 #include <boost/process/search_path.hpp>
 #include <boost/process/cmd.hpp>
 
+#include <cpprobotparser.hpp>
+
+Q_DECLARE_METATYPE(cpprobotparser::RobotsTxtRules)
+
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif

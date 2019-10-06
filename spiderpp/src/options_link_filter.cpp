@@ -5,7 +5,7 @@
 namespace spiderpp
 {
 
-OptionsLinkFilter::OptionsLinkFilter(const CrawlerOptionsData& crawlerOptionsData, const RobotsTxtRules& robotsTxtRules)
+OptionsLinkFilter::OptionsLinkFilter(const CrawlerOptionsData& crawlerOptionsData, const cpprobotparser::RobotsTxtRules& robotsTxtRules)
 	: m_crawlerOptionsData(crawlerOptionsData)
 	, m_robotsTxtRules(robotsTxtRules)
 {
@@ -67,23 +67,10 @@ bool OptionsLinkFilter::checkRestriction(Restriction restriction, const LinkInfo
 	return false;
 }
 
-std::pair<bool, MetaRobotsFlags> OptionsLinkFilter::isPageBlockedByMetaRobots(const ParsedPagePtr& parsedPage) const
-{
-	const bool isUrlExternal = PageParserHelpers::isUrlExternal(m_crawlerOptionsData.startCrawlingPage, parsedPage->url, m_crawlerOptionsData.checkSubdomains);
-
-	const std::pair<bool, UserAgentType> isAllowedForRobot = m_robotsTxtRules.isUrlAllowedByMetaRobotsFor(parsedPage->metaRobotsFlags, m_crawlerOptionsData.userAgentToFollow);
-
-	return std::make_pair(!isUrlExternal && m_crawlerOptionsData.followRobotsTxtRules && !isAllowedForRobot.first, parsedPage->metaRobotsFlags[isAllowedForRobot.second]);
-}
-
-bool OptionsLinkFilter::isLinkBlockedByMetaRobots(const MetaRobotsFlagsSet& metaRobotsFlags) const
-{
-	return !m_robotsTxtRules.isUrlAllowedByMetaRobots(metaRobotsFlags, m_crawlerOptionsData.userAgentToFollow);
-}
-
 bool OptionsLinkFilter::isLinkBlockedByRobotsTxt(const LinkInfo& linkInfo) const
 {
-	return !m_robotsTxtRules.isUrlAllowedByRobotsTxt(linkInfo.url, m_crawlerOptionsData.userAgentToFollow);
+	const QByteArray checkingUrl = linkInfo.url.toDisplayString().toUtf8();
+	return !m_robotsTxtRules.isUrlAllowed(checkingUrl.constData(), m_crawlerOptionsData.userAgentToFollow);
 }
 
 }

@@ -1,7 +1,5 @@
 #include "crawler.h"
 #include "crawler_worker.h"
-#include "robots_txt_rules.h"
-#include "robots_txt_loader.h"
 #include "thread_manager.h"
 #include "qt_based_download_handler.h"
 #include "host_info_provider.h"
@@ -14,6 +12,7 @@
 #include "helpers.h"
 #include "common_constants.h"
 #include "proper_404_checker.h"
+#include "robots_txt_loader.h"
 
 #ifdef ENABLE_SCREENSHOTS
 #include "screenshot_maker.h"
@@ -56,7 +55,7 @@ Crawler::Crawler(QObject* parent)
 	ASSERT(qRegisterMetaType<std::vector<ParsedPagePtr>>());
 	ASSERT(qRegisterMetaType<CrawlingProgress>());
 	ASSERT(qRegisterMetaType<CrawlerOptionsData>() > -1);
-	ASSERT(qRegisterMetaType<RobotsTxtRules>());
+	ASSERT(qRegisterMetaType<cpprobotparser::RobotsTxtRules>());
 
 	VERIFY(connect(m_crawlingStateTimer, &QTimer::timeout, this, &Crawler::onAboutCrawlingState));
 
@@ -290,7 +289,7 @@ void Crawler::onCrawlingSessionInitialized()
 	for (CrawlerWorker* worker : m_workers)
 	{
 		VERIFY(QMetaObject::invokeMethod(worker, "start", Qt::QueuedConnection,
-			Q_ARG(const CrawlerOptionsData&, m_options->data()), Q_ARG(RobotsTxtRules, RobotsTxtRules(m_robotsTxtLoader->content()))));
+			Q_ARG(const CrawlerOptionsData&, m_options->data()), Q_ARG(cpprobotparser::RobotsTxtRules, cpprobotparser::RobotsTxtRules(m_robotsTxtLoader->content().constData()))));
 	}
 
 	m_crawlingStateTimer->start();

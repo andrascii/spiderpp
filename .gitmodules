@@ -1,0 +1,3 @@
+[submodule "cpprobotparser"]
+	path = cpprobotparser
+	url = https://github.com/andrascii/cpprobotparser

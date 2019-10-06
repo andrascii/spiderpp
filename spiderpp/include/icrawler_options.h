@@ -1,6 +1,6 @@
 #pragma once
 
-#include "robots_txt_rules.h"
+#include "url.h"
 
 namespace spiderpp
 {
@@ -147,9 +147,9 @@ public:
 	virtual void setFollowRobotsTxtRules(bool value) noexcept = 0;
 	virtual void followRobotsTxtRulesChanged(bool value) const = 0;
 
-	virtual UserAgentType userAgentToFollow() const noexcept = 0;
-	virtual void setUserAgentToFollow(UserAgentType value) noexcept = 0;
-	virtual void userAgentToFollowChanged(UserAgentType value) const = 0;
+	virtual cpprobotparser::WellKnownUserAgent userAgentToFollow() const noexcept = 0;
+	virtual void setUserAgentToFollow(cpprobotparser::WellKnownUserAgent value) noexcept = 0;
+	virtual void userAgentToFollowChanged(cpprobotparser::WellKnownUserAgent value) const = 0;
 
 	virtual ParserTypeFlags parserTypeFlags() const noexcept = 0;
 	virtual void setParserTypeFlags(ParserTypeFlags value) noexcept = 0;

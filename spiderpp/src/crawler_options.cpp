@@ -361,12 +361,12 @@ void CrawlerOptions::setFollowRobotsTxtRules(bool value) noexcept
 	emit followRobotsTxtRulesChanged(m_data.followRobotsTxtRules);
 }
 
-UserAgentType CrawlerOptions::userAgentToFollow() const noexcept
+cpprobotparser::WellKnownUserAgent CrawlerOptions::userAgentToFollow() const noexcept
 {
 	return m_data.userAgentToFollow;
 }
 
-void CrawlerOptions::setUserAgentToFollow(UserAgentType value) noexcept
+void CrawlerOptions::setUserAgentToFollow(cpprobotparser::WellKnownUserAgent value) noexcept
 {
 	m_data.userAgentToFollow = value;
 

@@ -9,6 +9,7 @@
 #include "crawler.h"
 #include "finally.h"
 #include "iworker_page_loader.h"
+#include <cpprobotparser.hpp>
 
 Q_DECLARE_METATYPE(std::vector<bool>)
 
@@ -63,7 +64,7 @@ CrawlerWorker::CrawlerWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader
 	m_defferedProcessingTimer->setSingleShot(true);
 }
 
-void CrawlerWorker::start(const CrawlerOptionsData& optionsData, RobotsTxtRules robotsTxtRules)
+void CrawlerWorker::start(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules)
 {
 	DEBUG_ASSERT(thread() == QThread::currentThread());
 
@@ -86,7 +87,7 @@ void CrawlerWorker::stop()
 	m_pageLoader->setReceiveState(IWorkerPageLoader::CantReceivePages);
 }
 
-void CrawlerWorker::reinitOptions(const CrawlerOptionsData& optionsData, RobotsTxtRules robotsTxtRules)
+void CrawlerWorker::reinitOptions(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules)
 {
 	DEBUG_ASSERT(thread() == QThread::currentThread());
 

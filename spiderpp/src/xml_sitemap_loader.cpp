@@ -42,12 +42,8 @@ void XmlSitemapLoader::load()
 
 	if (m_robotsTxtLoader && m_robotsTxtLoader->isValid())
 	{
-		RobotsTxtRules robotsTxtRules(m_robotsTxtLoader->content());
-
-		if (robotsTxtRules.sitemap().isValid())
-		{
-			sitemapUrl = robotsTxtRules.sitemap();
-		}
+		cpprobotparser::RobotsTxtRules robotsTxtRules(m_robotsTxtLoader->content().constData());
+		sitemapUrl = QString(robotsTxtRules.sitemapUrl().c_str());
 	}
 
 	if (!sitemapUrl.isValid())

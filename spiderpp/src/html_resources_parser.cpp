@@ -1,5 +1,4 @@
 #include "html_resources_parser.h"
-#include "meta_parser.h"
 #include "title_parser.h"
 #include "h_parser.h"
 #include "word_count_parser.h"
@@ -16,7 +15,6 @@ HtmlResourcesParser::HtmlResourcesParser(IHtmlParser* htmlParser, bool parseMeta
 	: m_htmlParser(htmlParser)
 	, m_parseMetaHrefLangLinks(parseMetaHrefLangLinks)
 {
-	addParser(std::make_shared<MetaParser>(m_htmlParser));
 	addParser(std::make_shared<FramesDetectorParser>(m_htmlParser));
 	addParser(std::make_shared<TitleParser>(m_htmlParser));
 	addParser(std::make_shared<HParser>(m_htmlParser));

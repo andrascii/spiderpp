@@ -28,8 +28,8 @@ signals:
 	void workerResult(WorkerResult workerResult) const;
 
 public slots:
-	void reinitOptions(const CrawlerOptionsData& optionsData, RobotsTxtRules robotsTxtRules);
-	void start(const CrawlerOptionsData& optionsData, RobotsTxtRules robotsTxtRules);
+	void reinitOptions(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules);
+	void start(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules);
 	void stop();
 
 private slots:
