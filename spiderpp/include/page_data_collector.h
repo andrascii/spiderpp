@@ -29,7 +29,6 @@ private:
 	void applyOptions();
 	void collectReplyData(const Hop& hop, ParsedPagePtr& page) const;
 	void setResourceType(ParsedPagePtr& page) const;
-	std::shared_ptr<IPageParser> createParser(ParserType parserType) const;
 
 private:
 	CompoundParser m_parser;

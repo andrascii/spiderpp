@@ -1,11 +1,6 @@
 #include "html_resources_parser.h"
-#include "title_parser.h"
-#include "h_parser.h"
-#include "word_count_parser.h"
 #include "page_parser_helpers.h"
-#include "data_resources_parser.h"
 #include "ihtml_parser.h"
-#include "frames_detector_parser.h"
 #include "myhtml_parser.h"
 
 namespace spiderpp
@@ -15,11 +10,6 @@ HtmlResourcesParser::HtmlResourcesParser(IHtmlParser* htmlParser, bool parseMeta
 	: m_htmlParser(htmlParser)
 	, m_parseMetaHrefLangLinks(parseMetaHrefLangLinks)
 {
-	addParser(std::make_shared<FramesDetectorParser>(m_htmlParser));
-	addParser(std::make_shared<TitleParser>(m_htmlParser));
-	addParser(std::make_shared<HParser>(m_htmlParser));
-	addParser(std::make_shared<WordCountParser>(m_htmlParser));
-	addParser(std::make_shared<DataResourcesParser>(ResourceType::ResourceHtml));
 }
 
 void HtmlResourcesParser::parse(const ResponseHeaders& headers, ParsedPagePtr& page)
