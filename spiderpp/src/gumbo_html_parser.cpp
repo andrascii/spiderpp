@@ -58,10 +58,11 @@ bool checkAttribute(const GumboNode* node, const char* attribute, const char* ex
 namespace spiderpp
 {
 
-GumboHtmlParser::GumboHtmlParser() 
+GumboHtmlParser::GumboHtmlParser()
 	: m_gumboOptions(&kGumboDefaultOptions)
 	, m_gumboOutput(nullptr)
 	, m_rootNode(nullptr)
+	, m_regExp("[\\n\\t]+")
 {
 }
 
@@ -70,6 +71,7 @@ GumboHtmlParser::GumboHtmlParser(const GumboOptions* options, const QByteArray& 
 	, m_gumboOutput(gumbo_parse_with_options(options, htmlPage.data(), htmlPage.size()))
 	, m_htmlPage(htmlPage)
 	, m_rootNode(m_gumboOutput->root)
+	, m_regExp("[\\n\\t]+")
 {
 }
 
@@ -269,6 +271,83 @@ std::vector<LinkInfo> GumboHtmlParser::pageUrlList(bool httpOrHttpsOnly) const
 
 	const std::vector<LinkInfo> hrefLang = getLinkRelUrl(m_gumboOutput->root, "alternate", ResourceSource::SourceTagLinkAlternateHrefLang, "hreflang", false);
 	std::copy(hrefLang.cbegin(), hrefLang.cend(), std::back_inserter(result));
+
+	return result;
+}
+
+std::vector<Url> GumboHtmlParser::ahrefs(AhrefsType type) const
+{
+	const auto predicate = [this, type](const GumboNode* node)
+	{
+		bool result = node &&
+			node->type == GUMBO_NODE_ELEMENT &&
+			node->v.element.tag == GUMBO_TAG_A &&
+			gumbo_get_attribute(&node->v.element.attributes, "href");
+
+		if (!result)
+		{
+			return result;
+		}
+
+		GumboAttribute* hrefAttribute = gumbo_get_attribute(&node->v.element.attributes, "href");
+
+		QString hrefVal;
+
+		if (hrefAttribute)
+		{
+			hrefVal = hrefAttribute->value;
+		}
+		else
+		{
+			return false;
+		}
+
+		const GumboAttribute* relAttribute = gumbo_get_attribute(&node->v.element.attributes, "rel");
+
+		const bool isDofollowAhref = !relAttribute ||
+			relAttribute && QString(relAttribute->value).trimmed().remove(m_regExp) != "nofollow";
+
+		if (type == NofollowAhrefs && isDofollowAhref ||
+			type == DofollowAhrefs && !isDofollowAhref)
+		{
+			return false;
+		}
+
+		return PageParserHelpers::isHttpOrHttpsScheme(Url(hrefVal));
+	};
+
+	const auto resultGetter = [this](const GumboNode* node)
+	{
+		const GumboAttribute* href = gumbo_get_attribute(&node->v.element.attributes, "href");
+		const Url url = QString(href->value).trimmed().remove(m_regExp);
+
+		return url;
+	};
+
+	return findNodesAndGetResult(m_gumboOutput->root, predicate, resultGetter);
+}
+
+std::vector<Url> GumboHtmlParser::dofollowAhrefs() const
+{
+	return ahrefs(DofollowAhrefs);
+}
+
+std::vector<Url> GumboHtmlParser::nofollowAhrefs() const
+{
+	return ahrefs(NofollowAhrefs);
+}
+
+std::vector<Url> GumboHtmlParser::hreflangs() const
+{
+	const std::vector<LinkInfo> hrefLang = getLinkRelUrl(m_gumboOutput->root, "alternate", ResourceSource::SourceTagLinkAlternateHrefLang, "hreflang", false);
+
+	std::vector<Url> result;
+	result.reserve(hrefLang.size());
+
+	std::for_each(hrefLang.cbegin(), hrefLang.cend(), [&result](const LinkInfo& linkInfo)
+	{
+		result.push_back(linkInfo.url);
+	});
 
 	return result;
 }

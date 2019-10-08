@@ -6,7 +6,7 @@
 #include "worker_result.h"
 #include "crawler_options.h"
 #include "options_link_filter.h"
-#include <qobjectdefs.h>
+#include "url_parser.h"
 
 namespace spiderpp
 {
@@ -15,6 +15,7 @@ class IWorkerPageLoader;
 class UniqueLinkStore;
 class PageDataCollector;
 class HopsChain;
+class Hop;
 struct DownloadResponse;
 
 class CrawlerWorker : public QObject
@@ -35,12 +36,7 @@ public slots:
 private slots:
 	void extractUrlAndDownload();
 	void onAllLoadedDataToBeCleared();
-
-	void onLoadingDone(const HopsChain& hopsChain,
-		int turnaround,
-		bool isPageReloaded,
-		const std::vector<bool>& reloadingPageStrorages,
-		DownloadRequestType requestType);
+	void onLoadingDone(HopsChain& hopsChain, DownloadRequestType requestType);
 
 private:
 	struct SchedulePagesResult
@@ -50,31 +46,15 @@ private:
 	};
 
 
-	bool isExcludedByRegexp(const ResourceOnPage& resource) const;
-
-	SchedulePagesResult schedulePageResourcesLoading(ParsedPagePtr& parsedPage);
-	SchedulePagesResult handlePageLinkList(std::vector<ResourceOnPage>& linkList,
-		const MetaRobotsFlagsSet& metaRobotsFlags,
-		ParsedPagePtr& parsedPage);
+	bool isExcludedByRegexp(const Url& url) const;
 
 	void onPageParsed(const WorkerResult& result) const noexcept;
 	void fixDDOSGuardRedirectsIfNeeded(std::vector<ParsedPagePtr>& pages) const;
 
-	void handlePage(ParsedPagePtr& page,
-		int turnaround,
-		bool isUrlAdded,
-		bool isPageReloaded,
-		const std::vector<bool>& reloadingPageStrorages,
-		DownloadRequestType requestType);
-
-	void handleResponseData(const HopsChain& hopsChain,
-		int turnaround,
-		bool isPageReloaded,
-		const std::vector<bool>& reloadingPageStrorages,
-		DownloadRequestType requestType);
+	void handleResponse(HopsChain& hopsChain, DownloadRequestType requestType);
+	void handlePage(const Hop& loadResult);
 
 private:
-	PageDataCollector* m_pageDataCollector;
 	UniqueLinkStore* m_uniqueLinkStore;
 	std::unique_ptr<OptionsLinkFilter> m_optionsLinkFilter;
 
@@ -85,6 +65,7 @@ private:
 	IWorkerPageLoader* m_pageLoader;
 
 	QVector<QRegExp> m_excludeUrlRegExps;
+	UrlParser m_urlParser;
 };
 
 }

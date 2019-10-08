@@ -39,7 +39,6 @@ Crawler::Crawler(QObject* parent)
 	, m_uniqueLinkStore(nullptr)
 	, m_options(new CrawlerOptions(this))
 	, m_theradCount(0)
-	, m_crawlingStateTimer(new QTimer(this))
 	, m_state(StatePending)
 	, m_downloader(nullptr)
 	, m_webHostInfo(nullptr)
@@ -57,8 +56,6 @@ Crawler::Crawler(QObject* parent)
 	ASSERT(qRegisterMetaType<CrawlerOptionsData>() > -1);
 	ASSERT(qRegisterMetaType<cpprobotparser::RobotsTxtRules>());
 
-	VERIFY(connect(m_crawlingStateTimer, &QTimer::timeout, this, &Crawler::onAboutCrawlingState));
-
 	Common::Helpers::connectSignalsToMetaMethod(
 		options()->qobject(),
 		Common::Helpers::allUserSignals(options()->qobject()),
@@ -68,8 +65,6 @@ Crawler::Crawler(QObject* parent)
 
 	VERIFY(connect(m_robotsTxtLoader->qobject(), SIGNAL(ready()), this, SLOT(onCrawlingSessionInitialized()), Qt::QueuedConnection));
 	VERIFY(connect(m_xmlSitemapLoader->qobject(), SIGNAL(ready()), this, SLOT(onCrawlingSessionInitialized()), Qt::QueuedConnection));
-
-	m_crawlingStateTimer->setInterval(100);
 
 	s_instance = this;
 }
@@ -138,7 +133,6 @@ void Crawler::clearData()
 void Crawler::clearDataImpl()
 {
 	m_crawlingFinished = false;
-	CrawlerSharedState::instance()->clear();
 	m_uniqueLinkStore->clear();
 }
 
@@ -212,52 +206,10 @@ void Crawler::stopCrawling()
 		VERIFY(QMetaObject::invokeMethod(worker, "stop", Qt::BlockingQueuedConnection));
 	}
 
-	m_crawlingStateTimer->stop();
-
 	emit crawlerStopped();
 
 	ServiceLocator* serviceLocator = ServiceLocator::instance();
 	serviceLocator->service<INotificationService>()->info(tr("Crawler state"), tr("Crawler stopped"));
-}
-
-void Crawler::onAboutCrawlingState()
-{
-	CrawlingProgress progress;
-
-	const CrawlerSharedState* state = CrawlerSharedState::instance();
-
-	const int sequencedDataCollectionCount = state->sequencedDataCollectionLinksCount();
-	const int modelControllerCrawledLinksCount = state->modelControllerCrawledLinksCount();
-	const int modelControllerAcceptedLinksCount = state->modelControllerAcceptedLinksCount();
-	const int uniqueLinkStoreCrawledCount = state->downloaderCrawledLinksCount();
-	const int uniqueLinkStorePendingCount = state->downloaderPendingLinksCount();
-
-	const size_t controllerPending = qMax(uniqueLinkStoreCrawledCount, modelControllerCrawledLinksCount) - modelControllerCrawledLinksCount;
-	const size_t seqCollPending = qMax(modelControllerAcceptedLinksCount, sequencedDataCollectionCount) - sequencedDataCollectionCount;
-	const size_t additionalPendingCount = controllerPending + seqCollPending;
-
-	progress.crawledLinkCount = sequencedDataCollectionCount;
-	progress.pendingLinkCount = uniqueLinkStorePendingCount + additionalPendingCount;
-
-	emit crawlingProgress(progress);
-
-	const bool isCrawlingEnded = uniqueLinkStorePendingCount == 0 &&
-		sequencedDataCollectionCount > 0 &&
-		uniqueLinkStoreCrawledCount == state->workersProcessedLinksCount() &&
-		state->modelControllerCrawledLinksCount() == state->workersProcessedLinksCount() &&
-		modelControllerAcceptedLinksCount == sequencedDataCollectionCount;
-
-	if (isCrawlingEnded)
-	{
-		stopCrawling();
-		setState(StatePending);
-
-		ServiceLocator* serviceLocator = ServiceLocator::instance();
-		serviceLocator->service<INotificationService>()->info(tr("Crawler state"), tr("Program has ended crawling"));
-		m_crawlingFinished = true;
-
-		emit crawlerFinished();
-	}
 }
 
 void Crawler::onCrawlingSessionInitialized()
@@ -291,8 +243,6 @@ void Crawler::onCrawlingSessionInitialized()
 		VERIFY(QMetaObject::invokeMethod(worker, "start", Qt::QueuedConnection,
 			Q_ARG(const CrawlerOptionsData&, m_options->data()), Q_ARG(cpprobotparser::RobotsTxtRules, cpprobotparser::RobotsTxtRules(m_robotsTxtLoader->content().constData()))));
 	}
-
-	m_crawlingStateTimer->start();
 
 	emit crawlerStarted();
 

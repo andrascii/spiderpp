@@ -3,7 +3,6 @@
 #include "reset_connections_response.h"
 #include "download_response.h"
 #include "download_request.h"
-#include "crawler_shared_state.h"
 #include "pause_connections_request.h"
 #include "unpause_connections_request.h"
 #include "unique_link_store.h"
@@ -40,20 +39,14 @@ MultiRequestPageLoader::MultiRequestPageLoader(UniqueLinkStore* uniqueLinkStore,
 {
 }
 
-void MultiRequestPageLoader::onLoadingDone(Requester* requester, const DownloadResponse& response)
+void MultiRequestPageLoader::onLoadingDone(Requester* requester, DownloadResponse& response)
 {
 	DEBUG_ASSERT(m_activeRequesters.contains(requester) || m_onAboutClearData.contains(requester));
 
 	const DownloadRequest* downloadRequest =
 		Common::Helpers::fast_cast<DownloadRequest*>(requester->request());
 
-	const bool isPageReloaded = downloadRequest->linkStatus == DownloadRequest::Status::LinkStatusReloadAlreadyLoaded;
-
-	emit pageLoaded(response.hopsChain,
-		downloadRequest->turnaround,
-		isPageReloaded,
-		m_activeRequesters[requester].storagesBeforeRemoving,
-		downloadRequest->requestInfo.requestType);
+	emit pageLoaded(response.hopsChain, downloadRequest->requestInfo.requestType);
 
 	removeRequesterAssociatedData(requester);
 }
@@ -70,31 +63,21 @@ bool MultiRequestPageLoader::canPullLoading() const
 		return false;
 	}
 
-	constexpr int maxAdditionalPendingCount = 150;
-	if (CrawlerSharedState::instance()->additionalPendingCount() > maxAdditionalPendingCount)
-	{
-		return false;
-	}
-
 	return true;
 }
 
-void MultiRequestPageLoader::performLoading(const CrawlerRequest& crawlerRequest,
-	int turnaround,
-	const std::vector<bool>& reloadingPageStrorages,
-	DownloadRequest::Status linkStatus)
+void MultiRequestPageLoader::performLoading(const CrawlerRequest& crawlerRequest)
 {
-	DEBUG_ASSERT(m_state == CanReceivePages || linkStatus == DownloadRequest::Status::LinkStatusReloadAlreadyLoaded);
+	DEBUG_ASSERT(m_state == CanReceivePages);
 
-	DownloadRequest request(crawlerRequest, turnaround, linkStatus,
-		DownloadRequest::BodyProcessingCommand::CommandAutoDetectionBodyLoading, true);
+	DownloadRequest request(crawlerRequest, DownloadRequest::BodyProcessingCommand::CommandAutoDetectionBodyLoading, true);
 
 	RequesterWrapper requesterWrapper;
 
 	requesterWrapper.reset(request, this, &MultiRequestPageLoader::onLoadingDone);
 	requesterWrapper->start();
 
-	m_activeRequesters[requesterWrapper.get()] = RequesterAssociatedData{ requesterWrapper, reloadingPageStrorages };
+	m_activeRequesters[requesterWrapper.get()] = requesterWrapper;
 }
 
 void MultiRequestPageLoader::clear()
@@ -135,7 +118,7 @@ void MultiRequestPageLoader::setReceiveState(ReceiveState state)
 
 void MultiRequestPageLoader::removeRequesterAssociatedData(Requester* requester)
 {
-	m_activeRequesters[requester].requesterWrapper.reset();
+	m_activeRequesters[requester].reset();
 	m_activeRequesters.remove(requester);
 }
 

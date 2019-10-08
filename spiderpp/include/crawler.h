@@ -106,7 +106,6 @@ protected slots:
 	void onRefreshPageDone();
 
 private slots:
-	void onAboutCrawlingState();
 	void onCrawlingSessionInitialized();
 	void onCrawlerOptionsSomethingChanged();
 
@@ -140,8 +139,6 @@ private:
 
 	ICrawlerOptions* m_options;
 	unsigned int m_theradCount;
-
-	QTimer* m_crawlingStateTimer;
 
 	std::vector<CrawlerWorker*> m_workers;
 

@@ -55,6 +55,21 @@ public:
 		MetaHelpers::callForAllArgumentsInPack(binder, std::forward<decltype(callback)>(callback)...);
 	}
 
+	template <typename ObjectType, typename... Callbacks>
+	void reset(const IRequest& request, ObjectType* object, Callbacks&&... callbacks)
+	{
+		static_assert(sizeof...(callbacks), "Must be at least one callback");
+
+		m_requesterPtr.reset(new Requester(request));
+
+		const auto binder = [this, object](auto&& callback)
+		{
+			m_requesterPtr->addCallback(object, callback);
+		};
+
+		MetaHelpers::callForAllArgumentsInPack(binder, std::forward<decltype(callbacks)>(callbacks)...);
+	}
+
 private:
 	RequesterSharedPtr m_requesterPtr;
 };

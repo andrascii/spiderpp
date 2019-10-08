@@ -1,7 +1,7 @@
 #include "qt_page_loader.h"
-#include "download_response.h"
 #include "helpers.h"
-#include "crawler_shared_state.h"
+#include "download_response.h"
+#include "unique_link_store.h"
 
 namespace spiderpp
 {
@@ -19,8 +19,7 @@ bool QtPageLoader::canPullLoading() const
 		return false;
 	}
 
-	constexpr int maxAdditionalPendingCount = 150;
-	if (CrawlerSharedState::instance()->additionalPendingCount() > maxAdditionalPendingCount)
+	if (m_uniqueLinkStore->activeUrlCount() > 50)
 	{
 		return false;
 	}
@@ -28,17 +27,11 @@ bool QtPageLoader::canPullLoading() const
 	return true;
 }
 
-void QtPageLoader::performLoading(const CrawlerRequest& crawlerRequest,
-	int turnaround,
-	const std::vector<bool>& reloadingPageStrorages,
-	DownloadRequest::Status linkStatus)
+void QtPageLoader::performLoading(const CrawlerRequest& crawlerRequest)
 {
-	DEBUG_ASSERT(m_state == CanReceivePages || linkStatus == DownloadRequest::Status::LinkStatusReloadAlreadyLoaded);
+	DEBUG_ASSERT(m_state == CanReceivePages);
 
-	m_reloadingPageStrorages = reloadingPageStrorages;
-
-	DownloadRequest request(crawlerRequest, turnaround, linkStatus,
-		DownloadRequest::BodyProcessingCommand::CommandAutoDetectionBodyLoading, true);
+	DownloadRequest request(crawlerRequest, DownloadRequest::BodyProcessingCommand::CommandAutoDetectionBodyLoading, true);
 
 	m_requester.reset(request, this, &QtPageLoader::onLoadingDone);
 	m_requester->start();
@@ -62,18 +55,12 @@ QObject* QtPageLoader::qobject()
 	return this;
 }
 
-void QtPageLoader::onLoadingDone(Requester* requester, const DownloadResponse& response)
+void QtPageLoader::onLoadingDone(Requester* requester, DownloadResponse& response)
 {
 	const DownloadRequest* downloadRequest =
 		Common::Helpers::fast_cast<DownloadRequest*>(requester->request());
 
-	const bool isPageReloaded = downloadRequest->linkStatus == DownloadRequest::Status::LinkStatusReloadAlreadyLoaded;
-
-	emit pageLoaded(response.hopsChain,
-		downloadRequest->turnaround,
-		isPageReloaded,
-		m_reloadingPageStrorages,
-		downloadRequest->requestInfo.requestType);
+	emit pageLoaded(response.hopsChain, downloadRequest->requestInfo.requestType);
 
 	m_requester.reset();
 }

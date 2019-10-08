@@ -8,12 +8,6 @@ namespace spiderpp
 
 struct DownloadRequest : public IRequest
 {
-	enum class Status
-	{
-		LinkStatusReloadAlreadyLoaded,
-		LinkStatusFirstLoading
-	};
-
 	enum class BodyProcessingCommand
 	{
 		CommandDownloadBodyAnyway,
@@ -21,14 +15,11 @@ struct DownloadRequest : public IRequest
 	};
 
 	DownloadRequest(const CrawlerRequest& requestInfo,
-		int turnaround,
-		Status linkStatus = Status::LinkStatusFirstLoading,
 		BodyProcessingCommand bodyProcessingCommand = BodyProcessingCommand::CommandAutoDetectionBodyLoading,
 		bool useTimeout = false,
 		bool ignoreMaxParallelConnections = false)
 		: requestInfo(requestInfo)
 		, turnaround(turnaround)
-		, linkStatus(linkStatus)
 		, bodyProcessingCommand(bodyProcessingCommand)
 		, useTimeout(useTimeout)
 		, ignoreMaxParallelConnections(ignoreMaxParallelConnections)
@@ -45,7 +36,6 @@ struct DownloadRequest : public IRequest
 	}
 
 	CrawlerRequest requestInfo;
-	Status linkStatus;
 	BodyProcessingCommand bodyProcessingCommand;
 	int turnaround;
 

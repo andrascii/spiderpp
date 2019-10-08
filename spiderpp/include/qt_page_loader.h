@@ -18,32 +18,21 @@ public:
 	QtPageLoader(UniqueLinkStore* uniqueLinkStore);
 
 	virtual bool canPullLoading() const override;
-
-	virtual void performLoading(const CrawlerRequest& crawlerRequest,
-		int turnaround,
-		const std::vector<bool>& reloadingPageStrorages,
-		DownloadRequest::Status linkStatus) override;
-
+	virtual void performLoading(const CrawlerRequest& crawlerRequest) override;
 	virtual void setReceiveState(ReceiveState state) override;
-
 	virtual void clear() override;
 
 	virtual QObject* qobject() override;
 
 signals:
-	virtual void pageLoaded(const HopsChain& hopsChain,
-		int turnaround,
-		bool isPageReloaded,
-		const std::vector<bool>& reloadingPageStrorages,
-		DownloadRequestType requestType) override;
+	virtual void pageLoaded(HopsChain& hopsChain, DownloadRequestType requestType) override;
 
 private:
-	void onLoadingDone(Requester* requester, const DownloadResponse& response);
+	void onLoadingDone(Requester* requester, DownloadResponse& response);
 
 private:
 	ReceiveState m_state;
 	UniqueLinkStore* m_uniqueLinkStore;
-	std::vector<bool> m_reloadingPageStrorages;
 	RequesterWrapper m_requester;
 };
 
