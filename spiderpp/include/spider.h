@@ -1,6 +1,6 @@
 #pragma once
 
-#include "unique_link_store.h"
+#include "load_schedule.h"
 #include "crawler_options.h"
 #include "requester_wrapper.h"
 

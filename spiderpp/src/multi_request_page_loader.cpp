@@ -5,7 +5,7 @@
 #include "download_request.h"
 #include "pause_connections_request.h"
 #include "unpause_connections_request.h"
-#include "unique_link_store.h"
+#include "load_schedule.h"
 #include "helpers.h"
 
 namespace

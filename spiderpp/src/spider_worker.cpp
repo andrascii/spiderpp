@@ -1,5 +1,5 @@
 #include "spider_worker.h"
-#include "unique_link_store.h"
+#include "load_schedule.h"
 #include "page_parser_helpers.h"
 #include "download_request.h"
 #include "download_response.h"

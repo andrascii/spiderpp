@@ -1,7 +1,7 @@
 #include "qt_page_loader.h"
 #include "helpers.h"
 #include "download_response.h"
-#include "unique_link_store.h"
+#include "load_schedule.h"
 
 namespace spiderpp
 {
