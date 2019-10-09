@@ -65,6 +65,24 @@ public:
 		m_delegate.add(callback);
 	}
 
+	template <typename ObjectType, typename ResponseType>
+	void addCallback(ObjectType* object, void(ObjectType::*method)(Requester*, ResponseType&))
+	{
+		const auto callback = [this, object, method](const IResponse& response)
+		{
+			if (response.type() != ResponseType::responseStaticType())
+			{
+				return;
+			}
+
+			// TODO: const_cast - GOVNO-CODE
+			// removing const_cast requires fixes of Delegate type
+			(object->*method)(this, static_cast<ResponseType&>(const_cast<IResponse&>(response)));
+		};
+
+		m_delegate.add(callback);
+	}
+
 private:
 	std::shared_ptr<IRequest> m_request;
 

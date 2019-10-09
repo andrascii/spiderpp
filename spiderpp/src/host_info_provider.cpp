@@ -6,7 +6,6 @@
 #include "download_response.h"
 #include "crawler_request.h"
 #include "download_request.h"
-#include "crawler_shared_state.h"
 
 namespace spiderpp
 {
@@ -50,7 +49,7 @@ void HostInfoProvider::handleRequest(RequesterSharedPtr requester)
 	GetHostInfoRequest* request = static_cast<GetHostInfoRequest*>(requester->request());
 	m_pendingResponse.reset(new GetHostInfoResponse(QHostInfo::fromName(request->webpage.host(QUrl::FullyEncoded).toLatin1())));
 
-	const DownloadRequest downloadRequest(CrawlerRequest{ request->webpage, DownloadRequestType::RequestTypeHead}, CrawlerSharedState::instance()->turnaround());
+	const DownloadRequest downloadRequest(CrawlerRequest{ request->webpage, DownloadRequestType::RequestTypeHead });
 	m_downloadRequester.reset(downloadRequest, this, &HostInfoProvider::onLoadingDone);
 	m_downloadRequester->start();
 

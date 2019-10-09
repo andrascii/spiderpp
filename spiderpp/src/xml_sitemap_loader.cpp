@@ -58,7 +58,7 @@ void XmlSitemapLoader::load()
 	}
 
 	CrawlerRequest requestInfo{ sitemapUrl, DownloadRequestType::RequestTypeGet };
-	DownloadRequest request{ requestInfo, 0 };
+	DownloadRequest request{ requestInfo };
 
 	m_downloadRequester.reset(request, this, &XmlSitemapLoader::onLoadingDone);
 	m_downloadRequester->start();

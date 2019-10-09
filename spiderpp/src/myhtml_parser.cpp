@@ -270,6 +270,31 @@ std::vector<LinkInfo> MyHtmlParser::pageUrlList(bool httpOrHttpsOnly) const
 	return result;
 }
 
+std::vector<Url> MyHtmlParser::dofollowAhrefs() const
+{
+	return ahrefs(DofollowAhrefs);
+}
+
+std::vector<Url> MyHtmlParser::nofollowAhrefs() const
+{
+	return ahrefs(NofollowAhrefs);
+}
+
+std::vector<Url> MyHtmlParser::hreflangs() const
+{
+	const std::vector<LinkInfo> hrefLang = getLinkRelUrl("alternate", ResourceSource::SourceTagLinkAlternateHrefLang, "hreflang", false);
+
+	std::vector<Url> result;
+	result.reserve(hrefLang.size());
+
+	std::for_each(hrefLang.cbegin(), hrefLang.cend(), [&result](const LinkInfo& linkInfo)
+	{
+		result.push_back(linkInfo.url);
+	});
+
+	return result;
+}
+
 IHtmlNodeCountedPtr MyHtmlParser::firstMatchNode(IHtmlNode::TagId tagId) const
 {
 	return m_rootNode.firstMatchSubNode(tagId);
@@ -470,11 +495,11 @@ void MyHtmlParser::initRootNode()
 	{
 		return;
 	}
-    
-    Common::Finally destroyCollection([collection]
-    {
-        myhtml_collection_destroy(collection);
-    });
+
+	Common::Finally destroyCollection([collection]
+	{
+		myhtml_collection_destroy(collection);
+	});
 
 	for (std::size_t i = 0; i < collection->length; ++i)
 	{
@@ -506,6 +531,57 @@ QByteArray MyHtmlParser::encodingString(myencoding_t encoding) const
 	}
 
 	return QByteArray();
+}
+
+std::vector<Url> MyHtmlParser::ahrefs(AhrefsType type) const
+{
+	myhtml_collection_t* collection = myhtml_get_nodes_by_name(m_tree, nullptr, s_aTagName.data(), s_aTagName.size(), nullptr);
+
+	if (!collection)
+	{
+		return std::vector<Url>();
+	}
+
+	Common::Finally destroyCollection([collection]
+	{
+		myhtml_collection_destroy(collection);
+	});
+
+	std::vector<Url> result;
+	result.reserve(collection->length);
+
+	for (size_t i = 0; i < collection->length; ++i)
+	{
+		myhtml_tree_attr_t* hrefAttribute = myhtml_attribute_by_key(collection->list[i], s_hrefAttributeName.data(), s_hrefAttributeName.size());
+
+		if (!hrefAttribute)
+		{
+			continue;
+		}
+
+		const QString hrefAttributeValue = QString(myhtml_attribute_value(hrefAttribute, nullptr)).trimmed().remove(m_regExp);
+		const Url url = hrefAttributeValue;
+
+		if (!PageParserHelpers::isHttpOrHttpsScheme(Url(hrefAttributeValue)))
+		{
+			continue;
+		}
+
+		myhtml_tree_attr_t* relAttribute = myhtml_attribute_by_key(collection->list[i], s_relAttributeName.data(), s_relAttributeName.size());
+
+		const bool isDofollowAhref = !relAttribute ||
+			QString(myhtml_attribute_value(hrefAttribute, nullptr)).trimmed().remove(m_regExp) != s_relAttributeNofollowValue;
+
+		if (type == NofollowAhrefs && isDofollowAhref ||
+			type == DofollowAhrefs && !isDofollowAhref)
+		{
+			continue;
+		}
+
+		result.push_back(url);
+	}
+
+	return result;
 }
 
 }
