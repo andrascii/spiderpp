@@ -9,12 +9,12 @@ namespace spiderpp
 // ATTENTION: all public methods must be thread-safe
 //
 
-class UniqueLinkStore : public QObject
+class LoadSchedule : public QObject
 {
 	Q_OBJECT
 
 public:
-	UniqueLinkStore(QObject* parent);
+	LoadSchedule(QObject* parent);
 
 	bool extractUrl(DataToLoad& crawlerRequest) noexcept;
 

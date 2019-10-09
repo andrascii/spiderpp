@@ -33,9 +33,9 @@ QVector<QRegExp> getRegExps(const QString& str)
 namespace spiderpp
 {
 
-SpiderWorker::SpiderWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader* pageLoader)
+SpiderWorker::SpiderWorker(LoadSchedule* loadSchedule, IWorkerPageLoader* pageLoader)
 	: QObject(nullptr)
-	, m_uniqueLinkStore(uniqueLinkStore)
+	, m_loadSchedule(loadSchedule)
 	, m_isRunning(false)
 	, m_defferedProcessingTimer(new QTimer(this))
 	, m_pageLoader(pageLoader)
@@ -49,7 +49,7 @@ SpiderWorker::SpiderWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader* 
 	VERIFY(connect(m_pageLoader->qobject(), SIGNAL(pageLoaded(RedirectChain&, HttpLoadType)),
 		this, SLOT(onLoadingDone(RedirectChain&, HttpLoadType)), Qt::QueuedConnection));
 
-	VERIFY(connect(m_uniqueLinkStore, &UniqueLinkStore::urlAdded, this,
+	VERIFY(connect(m_loadSchedule, &LoadSchedule::urlAdded, this,
 		&SpiderWorker::extractUrlAndDownload, Qt::QueuedConnection));
 
 	VERIFY(connect(&Spider::instance(), &Spider::onAboutClearData,
@@ -108,7 +108,7 @@ void SpiderWorker::extractUrlAndDownload()
 		return;
 	}
 
-	const bool isUrlExtracted = m_uniqueLinkStore->extractUrl(crawlerRequest);
+	const bool isUrlExtracted = m_loadSchedule->extractUrl(crawlerRequest);
 
 	if (isUrlExtracted)
 	{
@@ -139,7 +139,7 @@ bool SpiderWorker::isExcludedByRegexp(const Url& url) const
 void SpiderWorker::onLoadingDone(RedirectChain& redirectChain, HttpLoadType requestType)
 {
 	DataToLoad readyRequest = { redirectChain.firstLoadResult().url(), requestType };
-	m_uniqueLinkStore->activeRequestReceived(readyRequest);
+	m_loadSchedule->activeRequestReceived(readyRequest);
 
 	extractUrlAndDownload();
 
@@ -183,7 +183,7 @@ void SpiderWorker::handleResponse(RedirectChain& redirectChain, HttpLoadType req
 			loadResult.url().setFragment(QString());
 		}
 
-		const bool isUrlAdded = !checkUrl || m_uniqueLinkStore->addCrawledUrl(loadResult.url(), requestType);
+		const bool isUrlAdded = !checkUrl || m_loadSchedule->addCrawledUrl(loadResult.url(), requestType);
 		checkUrl = true;
 
 		handlePage(loadResult);
@@ -206,8 +206,8 @@ void SpiderWorker::handlePage(const LoadResult& loadResult)
 			isExcludedByRegexp(url);
 	}));
 
-	m_uniqueLinkStore->addUrlList(std::move(urlList.dofollowAhrefs), HttpLoadType::RequestTypeGet);
-	m_uniqueLinkStore->addUrlList(std::move(urlList.nofollowAhrefs), HttpLoadType::RequestTypeGet);
+	m_loadSchedule->addUrlList(std::move(urlList.dofollowAhrefs), HttpLoadType::RequestTypeGet);
+	m_loadSchedule->addUrlList(std::move(urlList.nofollowAhrefs), HttpLoadType::RequestTypeGet);
 
 	if (!m_optionsData.crawlMetaHrefLangLinks)
 	{
@@ -220,7 +220,7 @@ void SpiderWorker::handlePage(const LoadResult& loadResult)
 			isExcludedByRegexp(url);
 	}));
 
-	m_uniqueLinkStore->addUrlList(std::move(urlList.hreflangs), HttpLoadType::RequestTypeGet);
+	m_loadSchedule->addUrlList(std::move(urlList.hreflangs), HttpLoadType::RequestTypeGet);
 }
 
 }

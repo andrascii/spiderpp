@@ -5,25 +5,25 @@
 namespace spiderpp
 {
 
-UniqueLinkStore::UniqueLinkStore(QObject* parent)
+LoadSchedule::LoadSchedule(QObject* parent)
 	: QObject(parent)
 	, m_limitCrawledLinksCount(-1)
 {
 }
 
-void UniqueLinkStore::addUrl(const Url& url, HttpLoadType requestType)
+void LoadSchedule::addUrl(const Url& url, HttpLoadType requestType)
 {
 	std::lock_guard locker(m_mutex);
 	addUrlInternal(DataToLoad{ url, requestType });
 }
 
-void UniqueLinkStore::addUrl(Url&& url, HttpLoadType requestType)
+void LoadSchedule::addUrl(Url&& url, HttpLoadType requestType)
 {
 	std::lock_guard locker(m_mutex);
 	addUrlInternal(DataToLoad{ std::move(url), requestType });
 }
 
-bool UniqueLinkStore::extractUrl(DataToLoad& crawlerRequest) noexcept
+bool LoadSchedule::extractUrl(DataToLoad& crawlerRequest) noexcept
 {
 	std::lock_guard locker(m_mutex);
 
@@ -54,7 +54,7 @@ bool UniqueLinkStore::extractUrl(DataToLoad& crawlerRequest) noexcept
 	return true;
 }
 
-void UniqueLinkStore::addUrlList(std::vector<Url> urlList, HttpLoadType requestType)
+void LoadSchedule::addUrlList(std::vector<Url> urlList, HttpLoadType requestType)
 {
 	if (urlList.empty())
 	{
@@ -75,7 +75,7 @@ void UniqueLinkStore::addUrlList(std::vector<Url> urlList, HttpLoadType requestT
 	emit urlAdded();
 }
 
-bool UniqueLinkStore::addCrawledUrl(const Url& url, HttpLoadType requestType)
+bool LoadSchedule::addCrawledUrl(const Url& url, HttpLoadType requestType)
 {
 	DEBUG_ASSERT(url.isValid());
 	DEBUG_ASSERT(url.fragment().isEmpty());
@@ -98,38 +98,38 @@ bool UniqueLinkStore::addCrawledUrl(const Url& url, HttpLoadType requestType)
 	return insertionResult;
 }
 
-bool UniqueLinkStore::hasCrawledRequest(const DataToLoad& request)
+bool LoadSchedule::hasCrawledRequest(const DataToLoad& request)
 {
 	std::lock_guard locker(m_mutex);
 
 	return m_crawledUrlList.find(request) != m_crawledUrlList.end();
 }
 
-void UniqueLinkStore::activeRequestReceived(const DataToLoad& request)
+void LoadSchedule::activeRequestReceived(const DataToLoad& request)
 {
 	std::lock_guard locker(m_mutex);
 	m_activeUrlList.erase(request);
 }
 
-size_t UniqueLinkStore::crawledCount() const noexcept
+size_t LoadSchedule::crawledCount() const noexcept
 {
 	std::lock_guard locker(m_mutex);
 	return m_crawledUrlList.size();
 }
 
-size_t UniqueLinkStore::pendingCount() const noexcept
+size_t LoadSchedule::pendingCount() const noexcept
 {
 	std::lock_guard locker(m_mutex);
 	return m_pendingUrlList.size();
 }
 
-size_t UniqueLinkStore::activeUrlCount() const noexcept
+size_t LoadSchedule::activeUrlCount() const noexcept
 {
 	std::lock_guard locker(m_mutex);
 	return m_activeUrlList.size();
 }
 
-std::vector<DataToLoad> UniqueLinkStore::crawledUrls() const
+std::vector<DataToLoad> LoadSchedule::crawledUrls() const
 {
 	std::lock_guard locker(m_mutex);
 	std::vector<DataToLoad> result;
@@ -143,7 +143,7 @@ std::vector<DataToLoad> UniqueLinkStore::crawledUrls() const
 	return result;
 }
 
-std::vector<DataToLoad> UniqueLinkStore::pendingUrls() const
+std::vector<DataToLoad> LoadSchedule::pendingUrls() const
 {
 	std::lock_guard locker(m_mutex);
 	std::vector<DataToLoad> result;
@@ -157,7 +157,7 @@ std::vector<DataToLoad> UniqueLinkStore::pendingUrls() const
 	return result;
 }
 
-std::vector<DataToLoad> UniqueLinkStore::pendingAndActiveUrls() const
+std::vector<DataToLoad> LoadSchedule::pendingAndActiveUrls() const
 {
 	std::lock_guard locker(m_mutex);
 	std::vector<DataToLoad> result;
@@ -176,21 +176,21 @@ std::vector<DataToLoad> UniqueLinkStore::pendingAndActiveUrls() const
 	return result;
 }
 
-void UniqueLinkStore::setCrawledUrls(const std::vector<DataToLoad>& urls)
+void LoadSchedule::setCrawledUrls(const std::vector<DataToLoad>& urls)
 {
 	std::lock_guard locker(m_mutex);
 	m_crawledUrlList.clear();
 	m_crawledUrlList.insert(urls.begin(), urls.end());
 }
 
-void UniqueLinkStore::setPendingUrls(const std::vector<DataToLoad>& urls)
+void LoadSchedule::setPendingUrls(const std::vector<DataToLoad>& urls)
 {
 	std::lock_guard locker(m_mutex);
 	m_pendingUrlList.clear();
 	m_pendingUrlList.insert(urls.begin(), urls.end());
 }
 
-void UniqueLinkStore::clear()
+void LoadSchedule::clear()
 {
 	std::lock_guard locker(m_mutex);
 
@@ -199,18 +199,18 @@ void UniqueLinkStore::clear()
 	m_activeUrlList.clear();
 }
 
-void UniqueLinkStore::clearPending()
+void LoadSchedule::clearPending()
 {
 	std::lock_guard locker(m_mutex);
 	m_pendingUrlList.clear();
 }
 
-void UniqueLinkStore::setLimitCrawledLinksCount(int value) noexcept
+void LoadSchedule::setLimitCrawledLinksCount(int value) noexcept
 {
 	m_limitCrawledLinksCount = value;
 }
 
-void UniqueLinkStore::addUrlInternal(DataToLoad&& request)
+void LoadSchedule::addUrlInternal(DataToLoad&& request)
 {
 	DEBUG_ASSERT(request.url.isValid());
 	DEBUG_ASSERT(request.url.fragment().isEmpty());

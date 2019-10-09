@@ -6,7 +6,7 @@
 namespace spiderpp
 {
 
-QtPageLoader::QtPageLoader(UniqueLinkStore* uniqueLinkStore)
+QtPageLoader::QtPageLoader(LoadSchedule* uniqueLinkStore)
 	: m_state(CanReceivePages)
 	, m_uniqueLinkStore(uniqueLinkStore)
 {

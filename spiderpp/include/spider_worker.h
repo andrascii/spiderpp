@@ -11,7 +11,7 @@ namespace spiderpp
 {
 
 class IWorkerPageLoader;
-class UniqueLinkStore;
+class LoadSchedule;
 class RedirectChain;
 struct DownloadResponse;
 
@@ -20,7 +20,7 @@ class SpiderWorker : public QObject
 	Q_OBJECT
 
 public:
-	SpiderWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader* pageLoader);
+	SpiderWorker(LoadSchedule* loadSchedule, IWorkerPageLoader* pageLoader);
 
 signals:
 	void onAboutLoadResult(LoadResult loadResult) const;
@@ -42,7 +42,7 @@ private:
 	void handlePage(const LoadResult& loadResult);
 
 private:
-	UniqueLinkStore* m_uniqueLinkStore;
+	LoadSchedule* m_loadSchedule;
 	std::unique_ptr<OptionsLinkFilter> m_optionsLinkFilter;
 
 	bool m_isRunning;

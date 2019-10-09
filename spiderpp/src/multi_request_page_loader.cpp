@@ -32,7 +32,7 @@ QString printReceiveState(IWorkerPageLoader::ReceiveState state)
 namespace spiderpp
 {
 
-MultiRequestPageLoader::MultiRequestPageLoader(UniqueLinkStore* uniqueLinkStore, QObject* parent)
+MultiRequestPageLoader::MultiRequestPageLoader(LoadSchedule* uniqueLinkStore, QObject* parent)
 	: QObject(parent)
 	, m_state(CanReceivePages)
 	, m_uniqueLinkStore(uniqueLinkStore)

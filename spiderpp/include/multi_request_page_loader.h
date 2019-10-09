@@ -7,7 +7,7 @@ namespace spiderpp
 {
 
 class Requester;
-class UniqueLinkStore;
+class LoadSchedule;
 struct DownloadResponse;
 struct ResetConnectionsResponse;
 
@@ -18,7 +18,7 @@ class MultiRequestPageLoader final
 	Q_OBJECT
 
 public:
-	MultiRequestPageLoader(UniqueLinkStore* uniqueLinkStore, QObject* parent = nullptr);
+	MultiRequestPageLoader(LoadSchedule* uniqueLinkStore, QObject* parent = nullptr);
 
 	virtual bool canPullLoading() const override;
 	virtual void performLoading(const DataToLoad& crawlerRequest) override;
@@ -40,7 +40,7 @@ private:
 private:
 	QMap<Requester*, RequesterWrapper> m_activeRequesters;
 	ReceiveState m_state;
-	UniqueLinkStore* m_uniqueLinkStore;
+	LoadSchedule* m_uniqueLinkStore;
 
 	QMap<Requester*, RequesterWrapper> m_onAboutClearData;
 	RequesterWrapper m_clearWrapper;

@@ -25,7 +25,7 @@ Spider& Spider::instance()
 Spider::Spider(QObject* parent)
 	: QObject(parent)
 	, m_robotsTxtLoader(new RobotsTxtLoader(this))
-	, m_uniqueLinkStore(nullptr)
+	, m_loadSchedule(nullptr)
 	, m_options(new CrawlerOptions(this))
 	, m_theradCount(0)
 	, m_state(StatePending)
@@ -79,11 +79,11 @@ void Spider::initialize()
 	ThreadManager& threadManager = ThreadManager::instance();
 	threadManager.moveObjectToThread(m_downloader->qobject(), "DownloaderThread");
 
-	m_uniqueLinkStore = new UniqueLinkStore(this);
+	m_loadSchedule = new LoadSchedule(this);
 
 	for (unsigned i = 0; i < workerCount(); ++i)
 	{
-		m_workers.push_back(new SpiderWorker(m_uniqueLinkStore, createWorkerPageLoader()));
+		m_workers.push_back(new SpiderWorker(m_loadSchedule, createWorkerPageLoader()));
 		threadManager.moveObjectToThread(m_workers.back(), QString("CrawlerWorkerThread#%1").arg(i).toLatin1());
 	}
 }
@@ -102,7 +102,7 @@ void Spider::clearData()
 void Spider::clearDataImpl()
 {
 	m_crawlingFinished = false;
-	m_uniqueLinkStore->clear();
+	m_loadSchedule->clear();
 }
 
 void Spider::setState(State state)
@@ -156,7 +156,7 @@ void Spider::startCrawling()
 	VERIFY(QMetaObject::invokeMethod(m_downloader->qobject(), "setMaxParallelConnections",
 		Qt::BlockingQueuedConnection, Q_ARG(int, m_options->maxParallelConnections())));
 
-	m_uniqueLinkStore->setLimitCrawledLinksCount(m_options->limitSearchTotal());
+	m_loadSchedule->setLimitCrawledLinksCount(m_options->limitSearchTotal());
 
 	tryToLoadCrawlingDependencies();
 }
@@ -205,7 +205,7 @@ void Spider::onCrawlingSessionInitialized()
 		VERIFY(QMetaObject::invokeMethod(m_downloader->qobject(), "resetProxy", Qt::BlockingQueuedConnection));
 	}
 
-	m_uniqueLinkStore->addUrl(m_options->startCrawlingPage(), HttpLoadType::RequestTypeGet);
+	m_loadSchedule->addUrl(m_options->startCrawlingPage(), HttpLoadType::RequestTypeGet);
 
 	for (SpiderWorker* worker : m_workers)
 	{
@@ -248,12 +248,12 @@ IWorkerPageLoader* Spider::createWorkerPageLoader() const
 		case DownloaderTypeQNetworkAccessManager:
 		{
 			INFOLOG << "Creating QtPageLoader";
-			return new QtPageLoader(m_uniqueLinkStore);
+			return new QtPageLoader(m_loadSchedule);
 		}
 		case DownloaderTypeLibCurlMultiSocket:
 		{
 			INFOLOG << "Creating MultiRequestPageLoader";
-			return new MultiRequestPageLoader(m_uniqueLinkStore);
+			return new MultiRequestPageLoader(m_loadSchedule);
 		}
 	}
 
@@ -299,9 +299,9 @@ void Spider::setUserAgent(const QByteArray& userAgent)
 		Qt::BlockingQueuedConnection, Q_ARG(const QByteArray&, userAgent)));
 }
 
-const UniqueLinkStore* Spider::uniqueLinkStore() const noexcept
+const LoadSchedule* Spider::uniqueLinkStore() const noexcept
 {
-	return m_uniqueLinkStore;
+	return m_loadSchedule;
 }
 
 ICrawlerOptions* Spider::options() const noexcept
@@ -311,12 +311,12 @@ ICrawlerOptions* Spider::options() const noexcept
 
 size_t Spider::scannedPagesCount() const
 {
-	return m_uniqueLinkStore->crawledCount();
+	return m_loadSchedule->crawledCount();
 }
 
 size_t Spider::pagesCountOnSite() const
 {
-	return m_uniqueLinkStore->pendingCount();
+	return m_loadSchedule->pendingCount();
 }
 
 void Spider::setWorkerCount(unsigned workerCount) noexcept

@@ -86,7 +86,7 @@ protected:
 	virtual IDownloadHandler* createDownloader() const;
 
 	IWorkerPageLoader* createWorkerPageLoader() const;
-	const UniqueLinkStore* uniqueLinkStore() const noexcept;
+	const LoadSchedule* uniqueLinkStore() const noexcept;
 
 private:
 	bool isPreinitialized() const;
@@ -99,7 +99,7 @@ private:
 	static Spider* s_instance;
 
 	ISpecificLoader* m_robotsTxtLoader;
-	UniqueLinkStore* m_uniqueLinkStore;
+	LoadSchedule* m_loadSchedule;
 
 	ICrawlerOptions* m_options;
 	unsigned int m_theradCount;
