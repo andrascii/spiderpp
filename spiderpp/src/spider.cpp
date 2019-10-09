@@ -1,5 +1,5 @@
 #include "spider.h"
-#include "crawler_worker.h"
+#include "spider_worker.h"
 #include "thread_manager.h"
 #include "qt_based_download_handler.h"
 #include "service_locator.h"
@@ -54,7 +54,7 @@ Spider::Spider(QObject* parent)
 
 Spider::~Spider()
 {
-	for (CrawlerWorker* worker : m_workers)
+	for (SpiderWorker* worker : m_workers)
 	{
 		VERIFY(QMetaObject::invokeMethod(worker, "stop", Qt::BlockingQueuedConnection));
 	}
@@ -83,7 +83,7 @@ void Spider::initialize()
 
 	for (unsigned i = 0; i < workerCount(); ++i)
 	{
-		m_workers.push_back(new CrawlerWorker(m_uniqueLinkStore, createWorkerPageLoader()));
+		m_workers.push_back(new SpiderWorker(m_uniqueLinkStore, createWorkerPageLoader()));
 		threadManager.moveObjectToThread(m_workers.back(), QString("CrawlerWorkerThread#%1").arg(i).toLatin1());
 	}
 }
@@ -170,7 +170,7 @@ void Spider::stopCrawling()
 
 	setState(StatePause);
 
-	for (CrawlerWorker* worker : m_workers)
+	for (SpiderWorker* worker : m_workers)
 	{
 		VERIFY(QMetaObject::invokeMethod(worker, "stop", Qt::BlockingQueuedConnection));
 	}
@@ -207,7 +207,7 @@ void Spider::onCrawlingSessionInitialized()
 
 	m_uniqueLinkStore->addUrl(m_options->startCrawlingPage(), DownloadRequestType::RequestTypeGet);
 
-	for (CrawlerWorker* worker : m_workers)
+	for (SpiderWorker* worker : m_workers)
 	{
 		VERIFY(QMetaObject::invokeMethod(worker, "start", Qt::QueuedConnection,
 			Q_ARG(const CrawlerOptionsData&, m_options->data()), Q_ARG(cpprobotparser::RobotsTxtRules, cpprobotparser::RobotsTxtRules(m_robotsTxtLoader->content().constData()))));

@@ -10,7 +10,7 @@ namespace spiderpp
 class ISpecificLoader;
 class IRobotsTxtRules;
 class IDownloadHandler;
-class CrawlerWorker;
+class SpiderWorker;
 class Requester;
 class IWorkerPageLoader;
 
@@ -104,7 +104,7 @@ private:
 	ICrawlerOptions* m_options;
 	unsigned int m_theradCount;
 
-	std::vector<CrawlerWorker*> m_workers;
+	std::vector<SpiderWorker*> m_workers;
 
 	State m_state;
 	State m_prevState;

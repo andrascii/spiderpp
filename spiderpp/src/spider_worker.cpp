@@ -1,4 +1,4 @@
-#include "crawler_worker.h"
+#include "spider_worker.h"
 #include "unique_link_store.h"
 #include "page_parser_helpers.h"
 #include "download_request.h"
@@ -33,7 +33,7 @@ QVector<QRegExp> getRegExps(const QString& str)
 namespace spiderpp
 {
 
-CrawlerWorker::CrawlerWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader* pageLoader)
+SpiderWorker::SpiderWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader* pageLoader)
 	: QObject(nullptr)
 	, m_uniqueLinkStore(uniqueLinkStore)
 	, m_isRunning(false)
@@ -50,19 +50,19 @@ CrawlerWorker::CrawlerWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader
 		this, SLOT(onLoadingDone(RedirectChain&, DownloadRequestType)), Qt::QueuedConnection));
 
 	VERIFY(connect(m_uniqueLinkStore, &UniqueLinkStore::urlAdded, this,
-		&CrawlerWorker::extractUrlAndDownload, Qt::QueuedConnection));
+		&SpiderWorker::extractUrlAndDownload, Qt::QueuedConnection));
 
 	VERIFY(connect(&Spider::instance(), &Spider::onAboutClearData,
-		this, &CrawlerWorker::onAllLoadedDataToBeCleared, Qt::QueuedConnection));
+		this, &SpiderWorker::onAllLoadedDataToBeCleared, Qt::QueuedConnection));
 
 	VERIFY(connect(m_defferedProcessingTimer, &QTimer::timeout,
-		this, &CrawlerWorker::extractUrlAndDownload));
+		this, &SpiderWorker::extractUrlAndDownload));
 
 	m_defferedProcessingTimer->setInterval(1000);
 	m_defferedProcessingTimer->setSingleShot(true);
 }
 
-void CrawlerWorker::start(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules)
+void SpiderWorker::start(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules)
 {
 	DEBUG_ASSERT(thread() == QThread::currentThread());
 
@@ -76,7 +76,7 @@ void CrawlerWorker::start(const CrawlerOptionsData& optionsData, cpprobotparser:
 	extractUrlAndDownload();
 }
 
-void CrawlerWorker::stop()
+void SpiderWorker::stop()
 {
 	DEBUG_ASSERT(thread() == QThread::currentThread());
 
@@ -85,7 +85,7 @@ void CrawlerWorker::stop()
 	m_pageLoader->setReceiveState(IWorkerPageLoader::CantReceivePages);
 }
 
-void CrawlerWorker::reinitOptions(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules)
+void SpiderWorker::reinitOptions(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules)
 {
 	DEBUG_ASSERT(thread() == QThread::currentThread());
 
@@ -93,7 +93,7 @@ void CrawlerWorker::reinitOptions(const CrawlerOptionsData& optionsData, cpprobo
 	m_excludeUrlRegExps = getRegExps(optionsData.excludeUrlRegExps);
 }
 
-void CrawlerWorker::extractUrlAndDownload()
+void SpiderWorker::extractUrlAndDownload()
 {
 	if (!m_isRunning)
 	{
@@ -116,12 +116,12 @@ void CrawlerWorker::extractUrlAndDownload()
 	}
 }
 
-void CrawlerWorker::onAllLoadedDataToBeCleared()
+void SpiderWorker::onAllLoadedDataToBeCleared()
 {
 	m_pageLoader->clear();
 }
 
-bool CrawlerWorker::isExcludedByRegexp(const Url& url) const
+bool SpiderWorker::isExcludedByRegexp(const Url& url) const
 {
 	for (auto it = m_excludeUrlRegExps.cbegin(); it != m_excludeUrlRegExps.cend(); ++it)
 	{
@@ -136,7 +136,7 @@ bool CrawlerWorker::isExcludedByRegexp(const Url& url) const
 	return false;
 }
 
-void CrawlerWorker::onLoadingDone(RedirectChain& redirectChain, DownloadRequestType requestType)
+void SpiderWorker::onLoadingDone(RedirectChain& redirectChain, DownloadRequestType requestType)
 {
 	CrawlerRequest readyRequest = { redirectChain.firstLoadResult().url(), requestType };
 	m_uniqueLinkStore->activeRequestReceived(readyRequest);
@@ -170,7 +170,7 @@ void CrawlerWorker::fixDDOSGuardRedirectsIfNeeded(std::vector<ParsedPagePtr>& pa
 	}
 }*/
 
-void CrawlerWorker::handleResponse(RedirectChain& redirectChain, DownloadRequestType requestType)
+void SpiderWorker::handleResponse(RedirectChain& redirectChain, DownloadRequestType requestType)
 {
 	bool checkUrl = false;
 
@@ -190,7 +190,7 @@ void CrawlerWorker::handleResponse(RedirectChain& redirectChain, DownloadRequest
 	}
 }
 
-void CrawlerWorker::handlePage(const LoadResult& loadResult)
+void SpiderWorker::handlePage(const LoadResult& loadResult)
 {
 	UrlParser::UrlList urlList = m_urlParser.urlList(loadResult);
 

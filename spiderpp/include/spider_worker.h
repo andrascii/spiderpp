@@ -12,16 +12,15 @@ namespace spiderpp
 
 class IWorkerPageLoader;
 class UniqueLinkStore;
-class PageDataCollector;
 class RedirectChain;
 struct DownloadResponse;
 
-class CrawlerWorker : public QObject
+class SpiderWorker : public QObject
 {
 	Q_OBJECT
 
 public:
-	CrawlerWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader* pageLoader);
+	SpiderWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader* pageLoader);
 
 signals:
 	void onAboutLoadResult(LoadResult loadResult) const;
