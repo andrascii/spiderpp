@@ -2,22 +2,12 @@
 #include "crawler_worker.h"
 #include "thread_manager.h"
 #include "qt_based_download_handler.h"
-#include "host_info_provider.h"
 #include "service_locator.h"
 #include "inotification_service.h"
 #include "notification_service.h"
-#include "xml_sitemap_loader.h"
-#include "get_host_info_request.h"
-#include "get_host_info_response.h"
 #include "helpers.h"
 #include "common_constants.h"
-#include "proper_404_checker.h"
 #include "robots_txt_loader.h"
-
-#ifdef ENABLE_SCREENSHOTS
-#include "screenshot_maker.h"
-#endif
-
 #include "multi_socket_download_handler.h"
 #include "multi_request_page_loader.h"
 #include "qt_page_loader.h"
@@ -35,13 +25,11 @@ Crawler& Crawler::instance()
 Crawler::Crawler(QObject* parent)
 	: QObject(parent)
 	, m_robotsTxtLoader(new RobotsTxtLoader(this))
-	, m_xmlSitemapLoader(new XmlSitemapLoader(static_cast<RobotsTxtLoader*>(m_robotsTxtLoader), this))
 	, m_uniqueLinkStore(nullptr)
 	, m_options(new CrawlerOptions(this))
 	, m_theradCount(0)
 	, m_state(StatePending)
 	, m_downloader(nullptr)
-	, m_webHostInfo(nullptr)
 	, m_downloaderType(DownloaderTypeQNetworkAccessManager)
 	, m_crawlingFinished(false)
 {
@@ -60,7 +48,6 @@ Crawler::Crawler(QObject* parent)
 	);
 
 	VERIFY(connect(m_robotsTxtLoader->qobject(), SIGNAL(ready()), this, SLOT(onCrawlingSessionInitialized()), Qt::QueuedConnection));
-	VERIFY(connect(m_xmlSitemapLoader->qobject(), SIGNAL(ready()), this, SLOT(onCrawlingSessionInitialized()), Qt::QueuedConnection));
 
 	s_instance = this;
 }
@@ -88,21 +75,9 @@ void Crawler::setDownloaderType(DownloaderType type)
 void Crawler::initialize()
 {
 	m_downloader = createDownloader();
-	m_webHostInfo = new WebHostInfo(this, m_xmlSitemapLoader, m_robotsTxtLoader);
-
-#ifdef ENABLE_SCREENSHOTS
-	VERIFY(connect(m_webHostInfo, &WebHostInfo::webScreenshotLoaded, this, &Crawler::onSessionChanged));
-#endif
 
 	ThreadManager& threadManager = ThreadManager::instance();
-
 	threadManager.moveObjectToThread(m_downloader->qobject(), "DownloaderThread");
-	threadManager.moveObjectToThread(createHostInfoProvider()->qobject(), "BackgroundThread");
-	threadManager.moveObjectToThread(new Proper404Checker, "BackgroundThread");
-
-#ifdef ENABLE_SCREENSHOTS
-	threadManager.moveObjectToThread(createScreenshotMaker()->qobject(), "BackgroundThread");
-#endif
 
 	m_uniqueLinkStore = new UniqueLinkStore(this);
 
@@ -120,8 +95,6 @@ void Crawler::clearData()
 	clearDataImpl();
 
 	setState(StatePending);
-
-	m_hostInfo.reset();
 
 	emit onAboutClearData();
 }
@@ -185,7 +158,7 @@ void Crawler::startCrawling()
 
 	m_uniqueLinkStore->setLimitCrawledLinksCount(m_options->limitSearchTotal());
 
-	initializeCrawlingSession();
+	tryToLoadCrawlingDependencies();
 }
 
 void Crawler::stopCrawling()
@@ -251,48 +224,7 @@ void Crawler::onCrawlerOptionsSomethingChanged()
 
 bool Crawler::isPreinitialized() const
 {
-	return m_robotsTxtLoader->isReady() && m_xmlSitemapLoader->isReady();
-}
-
-void Crawler::initializeCrawlingSession()
-{
-	if (m_hostInfo)
-	{
-		tryToLoadCrawlingDependencies();
-		return;
-	}
-
-	GetHostInfoRequest request(m_options->startCrawlingPage());
-
-	m_hostInfoRequester.reset(request, this, &Crawler::onHostInfoResponse);
-
-	m_hostInfoRequester->start();
-}
-
-void Crawler::onHostInfoResponse(Requester*, const GetHostInfoResponse& response)
-{
-	m_hostInfoRequester->stop();
-
-	if (response.hostInfo.error() != QHostInfo::NoError)
-	{
-		ServiceLocator* serviceLocator = ServiceLocator::instance();
-
-		serviceLocator->service<INotificationService>()->error(
-			tr("DNS Lookup Failed!"),
-			tr("I'm sorry but I cannot find this website\n"
-				"Please, be sure that you entered a valid address")
-		);
-
-		setState(StatePending);
-		emit crawlerFailed();
-
-		return;
-	}
-
-	m_hostInfo.reset(new QHostInfo(response.hostInfo));
-	m_options->setStartCrawlingPage(response.url);
-
-	tryToLoadCrawlingDependencies();
+	return m_robotsTxtLoader->isReady();
 }
 
 void Crawler::tryToLoadCrawlingDependencies()
@@ -306,10 +238,7 @@ void Crawler::tryToLoadCrawlingDependencies()
 	}
 
 	m_robotsTxtLoader->setHost(m_options->startCrawlingPage());
-	m_xmlSitemapLoader->setHost(m_options->startCrawlingPage());
-	m_webHostInfo->reset(m_options->startCrawlingPage());
 	m_robotsTxtLoader->load();
-	m_xmlSitemapLoader->load();
 }
 
 IWorkerPageLoader* Crawler::createWorkerPageLoader() const
@@ -332,18 +261,6 @@ IWorkerPageLoader* Crawler::createWorkerPageLoader() const
 
 	return nullptr;
 }
-
-IHostInfoProvider* Crawler::createHostInfoProvider() const
-{
-	return new HostInfoProvider;
-}
-
-#ifdef ENABLE_SCREENSHOTS
-IScreenshotMaker* Crawler::createScreenshotMaker()
-{
-	return new ScreenshotMaker;
-}
-#endif
 
 IDownloadHandler* Crawler::createDownloader() const
 {
@@ -369,26 +286,6 @@ IDownloadHandler* Crawler::createDownloader() const
 const ISpecificLoader* Crawler::robotsTxtLoader() const noexcept
 {
 	return m_robotsTxtLoader;
-}
-
-const ISpecificLoader* Crawler::xmlSitemapLoader() const noexcept
-{
-	return m_xmlSitemapLoader;
-}
-
-const WebHostInfo * Crawler::webHostInfo() const
-{
-	return m_webHostInfo;
-}
-
-std::optional<QByteArray> Crawler::currentCrawledSiteIPv4() const
-{
-	if (m_hostInfo && !m_hostInfo->addresses().isEmpty())
-	{
-		return m_hostInfo->addresses().first().toString().toUtf8();
-	}
-
-	return std::make_optional<QByteArray>();
 }
 
 QString Crawler::currentCrawledUrl() const noexcept
