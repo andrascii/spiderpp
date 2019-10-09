@@ -1,10 +1,8 @@
 #pragma once
 
-#include "parsed_page.h"
 #include "unique_link_store.h"
 #include "crawler_options.h"
 #include "requester_wrapper.h"
-#include "storage_type.h"
 #include "web_host_info.h"
 
 namespace spiderpp
@@ -16,7 +14,6 @@ class IDownloadHandler;
 class IWebScreenShot;
 class IHostInfoProvider;
 class CrawlerWorker;
-class ModelController;
 class Requester;
 class IWorkerPageLoader;
 
@@ -24,7 +21,6 @@ class IWorkerPageLoader;
 class IScreenshotMaker;
 #endif
 
-struct SiteMapSettings;
 struct GetHostInfoResponse;
 
 class Crawler : public QObject

@@ -1,8 +1,9 @@
 #include "gumbo_html_parser.h"
 #include "gumbo_html_node.h"
 #include "response_headers.h"
-#include "parsed_page.h"
 #include "page_parser_helpers.h"
+#include "url.h"
+#include "ahref_rel_type.h"
 
 namespace
 {
@@ -205,76 +206,6 @@ QByteArray GumboHtmlParser::decodeHtmlPage(const ResponseHeaders& headers)
 	return m_htmlPage;
 }
 
-std::vector<LinkInfo> GumboHtmlParser::pageUrlList(bool httpOrHttpsOnly) const
-{
-	const auto predicate = [httpOrHttpsOnly](const GumboNode* node)
-	{
-		bool result = node &&
-			node->type == GUMBO_NODE_ELEMENT &&
-			node->v.element.tag == GUMBO_TAG_A &&
-			gumbo_get_attribute(&node->v.element.attributes, "href");
-
-		if (!result || !httpOrHttpsOnly)
-		{
-			return result;
-		}
-
-		GumboAttribute* href = gumbo_get_attribute(&node->v.element.attributes, "href");
-		QString hrefVal = href->value;
-
-		return PageParserHelpers::isHttpOrHttpsScheme(Url(hrefVal));
-	};
-
-	const auto resultGetter = [](const GumboNode* node)
-	{
-		const QRegularExpression regExp("[\\n\\t]+");
-
-		const GumboAttribute* href = gumbo_get_attribute(&node->v.element.attributes, "href");
-		const GumboAttribute* rel = gumbo_get_attribute(&node->v.element.attributes, "rel");
-
-		LinkParameter linkParam = LinkParameter::DofollowParameter;
-
-		if (rel != nullptr && std::strstr(rel->value, "nofollow") != nullptr)
-		{
-			linkParam = LinkParameter::NofollowParameter;
-		}
-
-		const QString altOrTitle(GumboHtmlNode(const_cast<GumboNode*>(node)).text());
-		const bool dataResource = QByteArray(href->value).startsWith("data:");
-		const Url url = QString(href->value).trimmed().remove(regExp);
-
-		return LinkInfo{ url, linkParam, altOrTitle, dataResource, ResourceSource::SourceTagA };
-	};
-
-	std::vector<LinkInfo> result = findNodesAndGetResult(m_gumboOutput->root, predicate, resultGetter);
-
-	const std::vector<LinkInfo> canonical = getLinkRelUrl(m_gumboOutput->root, "canonical", ResourceSource::SourceTagLinkRelCanonical);
-
-	if (!canonical.empty())
-	{
-		result.push_back(canonical[0]);
-	}
-
-	const std::vector<LinkInfo> next = getLinkRelUrl(m_gumboOutput->root, "next", ResourceSource::SourceTagLinkRelNext);
-
-	if (!next.empty())
-	{
-		result.push_back(next[0]);
-	}
-
-	const std::vector<LinkInfo> prev = getLinkRelUrl(m_gumboOutput->root, "prev", ResourceSource::SourceTagLinkRelPrev);
-
-	if (!prev.empty())
-	{
-		result.push_back(prev[0]);
-	}
-
-	const std::vector<LinkInfo> hrefLang = getLinkRelUrl(m_gumboOutput->root, "alternate", ResourceSource::SourceTagLinkAlternateHrefLang, "hreflang", false);
-	std::copy(hrefLang.cbegin(), hrefLang.cend(), std::back_inserter(result));
-
-	return result;
-}
-
 std::vector<Url> GumboHtmlParser::ahrefs(AhrefsType type) const
 {
 	const auto predicate = [this, type](const GumboNode* node)
@@ -339,20 +270,10 @@ std::vector<Url> GumboHtmlParser::nofollowAhrefs() const
 
 std::vector<Url> GumboHtmlParser::hreflangs() const
 {
-	const std::vector<LinkInfo> hrefLang = getLinkRelUrl(m_gumboOutput->root, "alternate", ResourceSource::SourceTagLinkAlternateHrefLang, "hreflang", false);
-
-	std::vector<Url> result;
-	result.reserve(hrefLang.size());
-
-	std::for_each(hrefLang.cbegin(), hrefLang.cend(), [&result](const LinkInfo& linkInfo)
-	{
-		result.push_back(linkInfo.url);
-	});
-
-	return result;
+	return getLinkRelUrl(m_gumboOutput->root, "alternate", "hreflang", false);
 }
 
-std::vector<LinkInfo> GumboHtmlParser::getLinkRelUrl(const GumboNode* node, const char* relValue, ResourceSource source, const char* requiredAttribute, bool getFirstValueOnly) const
+std::vector<Url> GumboHtmlParser::getLinkRelUrl(const GumboNode* node, const char* relValue, const char* requiredAttribute, bool getFirstValueOnly) const
 {
 	const auto cond = [relValue, requiredAttribute](const GumboNode* node)
 	{
@@ -365,20 +286,19 @@ std::vector<LinkInfo> GumboHtmlParser::getLinkRelUrl(const GumboNode* node, cons
 		return result;
 	};
 
-	const auto res = [source](const GumboNode* node)
+	const auto res = [](const GumboNode* node)
 	{
 		const GumboAttribute* href = gumbo_get_attribute(&node->v.element.attributes, "href");
-		const LinkParameter linkParam = LinkParameter::DofollowParameter;
-		const bool dataResource = QByteArray(href->value).startsWith("data:");
-
-		return LinkInfo{ Url(href->value), linkParam, QString(), dataResource, source };
+		return Url(href->value);
 	};
 
-	std::vector<LinkInfo> result = findNodesAndGetResult(node, cond, res);
+	std::vector<Url> result = findNodesAndGetResult(node, cond, res);
+
 	if (getFirstValueOnly && !result.empty())
 	{
 		return { result[0] };
 	}
+
 	return result;
 }
 

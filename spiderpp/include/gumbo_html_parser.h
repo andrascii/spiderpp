@@ -34,13 +34,12 @@ public:
 
 	// TODO: this method must not be in this interface
 	// we need to implement them using matchNodesInDepth method
-	virtual std::vector<LinkInfo> pageUrlList(bool httpOrHttpsOnly) const override;
 	virtual std::vector<Url> dofollowAhrefs() const override;
 	virtual std::vector<Url> nofollowAhrefs() const override;
 	virtual std::vector<Url> hreflangs() const override;
 
 private:
-	std::vector<LinkInfo> getLinkRelUrl(const GumboNode* node, const char* relValue, ResourceSource source, const char* requiredAttribute = nullptr, bool getFirstValueOnly = true) const;
+	std::vector<Url> getLinkRelUrl(const GumboNode* node, const char* relValue, const char* requiredAttribute = nullptr, bool getFirstValueOnly = true) const;
 	QByteArray encodingFromPage() const;
 	QByteArray decodeHtmlPage(const ResponseHeaders& headers);
 

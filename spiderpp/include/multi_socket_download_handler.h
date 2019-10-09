@@ -4,6 +4,7 @@
 #include "crawler_request.h"
 #include "abstract_download_handler.h"
 #include "download_request.h"
+#include "status_code.h"
 
 namespace spiderpp
 {

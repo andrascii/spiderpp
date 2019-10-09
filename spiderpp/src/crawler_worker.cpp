@@ -148,6 +148,7 @@ void CrawlerWorker::onLoadingDone(RedirectChain& redirectChain, DownloadRequestT
 	handleResponse(redirectChain, requestType);
 }
 
+/*
 void CrawlerWorker::fixDDOSGuardRedirectsIfNeeded(std::vector<ParsedPagePtr>& pages) const
 {
 	const int pagesCount = static_cast<int>(pages.size());
@@ -167,7 +168,7 @@ void CrawlerWorker::fixDDOSGuardRedirectsIfNeeded(std::vector<ParsedPagePtr>& pa
 			}
 		}
 	}
-}
+}*/
 
 void CrawlerWorker::handleResponse(RedirectChain& redirectChain, DownloadRequestType requestType)
 {
@@ -195,13 +196,13 @@ void CrawlerWorker::handlePage(const LoadResult& loadResult)
 
 	urlList.dofollowAhrefs.erase(std::remove_if(urlList.dofollowAhrefs.begin(), urlList.dofollowAhrefs.end(), [this](const Url& url)
 	{
-		return m_optionsLinkFilter->isUrlAllowedToCrawl(url, LinkParameter::DofollowParameter) ||
+		return m_optionsLinkFilter->isUrlAllowedToCrawl(url, AhrefRelType::DofollowParameter) ||
 			isExcludedByRegexp(url);
 	}));
 
 	urlList.nofollowAhrefs.erase(std::remove_if(urlList.nofollowAhrefs.begin(), urlList.nofollowAhrefs.end(), [this](const Url& url)
 	{
-		return m_optionsLinkFilter->isUrlAllowedToCrawl(url, LinkParameter::NofollowParameter) ||
+		return m_optionsLinkFilter->isUrlAllowedToCrawl(url, AhrefRelType::NofollowParameter) ||
 			isExcludedByRegexp(url);
 	}));
 
@@ -215,7 +216,7 @@ void CrawlerWorker::handlePage(const LoadResult& loadResult)
 
 	urlList.hreflangs.erase(std::remove_if(urlList.hreflangs.begin(), urlList.hreflangs.end(), [this](const Url& url)
 	{
-		return m_optionsLinkFilter->isUrlAllowedToCrawl(url, LinkParameter::DofollowParameter) ||
+		return m_optionsLinkFilter->isUrlAllowedToCrawl(url, AhrefRelType::DofollowParameter) ||
 			isExcludedByRegexp(url);
 	}));
 

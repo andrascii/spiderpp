@@ -1,9 +1,10 @@
 #include "myhtml_parser.h"
 #include "myhtml/api.h"
 #include "response_headers.h"
-#include "parsed_page.h"
 #include "page_parser_helpers.h"
 #include "finally.h"
+#include "ahref_rel_type.h"
+#include "url.h"
 
 namespace
 {
@@ -191,85 +192,6 @@ void MyHtmlParser::parseHtmlPage(const QByteArray& htmlPage, const ResponseHeade
 	m_currentPageEncoding = encodingString(encoding);
 }
 
-std::vector<LinkInfo> MyHtmlParser::pageUrlList(bool httpOrHttpsOnly) const
-{
-	myhtml_collection_t* collection = myhtml_get_nodes_by_name(m_tree, nullptr, s_aTagName.data(), s_aTagName.size(), nullptr);
-
-	if (!collection)
-	{
-		return std::vector<LinkInfo>();
-	}
-
-	Common::Finally destroyCollection([collection]
-	{
-		myhtml_collection_destroy(collection);
-	});
-
-	std::vector<LinkInfo> result;
-	result.reserve(collection->length);
-
-	for (size_t i = 0; i < collection->length; ++i)
-	{
-		myhtml_tree_attr_t* hrefAttribute = myhtml_attribute_by_key(collection->list[i], s_hrefAttributeName.data(), s_hrefAttributeName.size());
-
-		if (!hrefAttribute)
-		{
-			continue;
-		}
-
-		const QString hrefAttributeValue = QString(myhtml_attribute_value(hrefAttribute, nullptr)).trimmed().remove(m_regExp);
-		const Url url = hrefAttributeValue;
-
-		if (httpOrHttpsOnly && !PageParserHelpers::isHttpOrHttpsScheme(Url(hrefAttributeValue)))
-		{
-			continue;
-		}
-
-		LinkParameter linkParam = LinkParameter::DofollowParameter;
-		myhtml_tree_attr_t* relAttribute = myhtml_attribute_by_key(collection->list[i], s_relAttributeName.data(), s_relAttributeName.size());
-
-		if (relAttribute)
-		{
-			QByteArray relAttrValue = QByteArray(myhtml_attribute_value(relAttribute, nullptr)).trimmed();
-
-			if (relAttrValue == s_relAttributeNofollowValue)
-			{
-				linkParam = LinkParameter::NofollowParameter;
-			}
-		}
-
-		const QString altOrTitle(MyHtmlNode(collection->list[i]).text());
-		const bool dataResource = hrefAttributeValue.startsWith("data:");
-		result.push_back(LinkInfo{ url, linkParam, altOrTitle, dataResource, ResourceSource::SourceTagA });
-	}
-
-	const std::vector<LinkInfo> canonical = getLinkRelUrl("canonical", ResourceSource::SourceTagLinkRelCanonical);
-
-	if (!canonical.empty())
-	{
-		result.push_back(canonical[0]);
-	}
-
-	const std::vector<LinkInfo> next = getLinkRelUrl("next", ResourceSource::SourceTagLinkRelNext);
-
-	if (!next.empty())
-	{
-		result.push_back(next[0]);
-	}
-
-	const std::vector<LinkInfo> prev = getLinkRelUrl("prev", ResourceSource::SourceTagLinkRelPrev);
-
-	if (!prev.empty())
-	{
-		result.push_back(prev[0]);
-	}
-
-	const std::vector<LinkInfo> hrefLang = getLinkRelUrl("alternate", ResourceSource::SourceTagLinkAlternateHrefLang, "hreflang", false);
-	std::copy(hrefLang.cbegin(), hrefLang.cend(), std::back_inserter(result));
-
-	return result;
-}
-
 std::vector<Url> MyHtmlParser::dofollowAhrefs() const
 {
 	return ahrefs(DofollowAhrefs);
@@ -282,17 +204,7 @@ std::vector<Url> MyHtmlParser::nofollowAhrefs() const
 
 std::vector<Url> MyHtmlParser::hreflangs() const
 {
-	const std::vector<LinkInfo> hrefLang = getLinkRelUrl("alternate", ResourceSource::SourceTagLinkAlternateHrefLang, "hreflang", false);
-
-	std::vector<Url> result;
-	result.reserve(hrefLang.size());
-
-	std::for_each(hrefLang.cbegin(), hrefLang.cend(), [&result](const LinkInfo& linkInfo)
-	{
-		result.push_back(linkInfo.url);
-	});
-
-	return result;
+	return getLinkRelUrl("alternate", "hreflang", false);
 }
 
 IHtmlNodeCountedPtr MyHtmlParser::firstMatchNode(IHtmlNode::TagId tagId) const
@@ -354,9 +266,9 @@ IHtmlAttributeCountedPtr MyHtmlParser::emptyAttribute() const
 	return Common::make_counted<MyHtmlAttribute>(nullptr);
 }
 
-std::vector<LinkInfo> MyHtmlParser::getLinkRelUrl(const char* relValue, ResourceSource source, const char* requiredAttribute, bool getFirstValueOnly) const
+std::vector<Url> MyHtmlParser::getLinkRelUrl(const char* relValue, const char* requiredAttribute, bool getFirstValueOnly) const
 {
-	std::vector<LinkInfo> result;
+	std::vector<Url> result;
 	myhtml_collection_t* collection = myhtml_get_nodes_by_name(m_tree, nullptr, s_linkTagName.data(), s_linkTagName.size(), nullptr);
 
 	if (!collection)
@@ -390,10 +302,8 @@ std::vector<LinkInfo> MyHtmlParser::getLinkRelUrl(const char* relValue, Resource
 		const QString hrefAttributeValue = QString(myhtml_attribute_value(hrefAttribute, nullptr)).trimmed().remove(m_regExp);
 		const Url url = hrefAttributeValue;
 
-		const QString altOrTitle(MyHtmlNode(collection->list[i]).text());
-		const bool dataResource = hrefAttributeValue.startsWith("data:");
+		result.push_back(url);
 
-		result.push_back({ url, LinkParameter::DofollowParameter, altOrTitle, dataResource, source });
 		if (getFirstValueOnly)
 		{
 			return result;

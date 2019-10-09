@@ -1,16 +1,15 @@
 #pragma once
 
-#include "parsed_page.h"
-
 namespace spiderpp
 {
+
+class Url;
 
 class PageParserHelpers
 {
 public:
 	static Url resolveRelativeUrl(const Url& relativeUrl, const Url& baseUrl);
 	static void resolveUrlList(const Url& baseUrl, std::vector<Url>& urlList) noexcept;
-	static void resolveUrlList(const Url& baseUrl, std::vector<LinkInfo>& linkList) noexcept;
 	static Url resolveUrl(const Url& baseUrl, const Url& url) noexcept;
 	static bool checkUrlIdentity(const Url& lhs, const Url& rhs);
 

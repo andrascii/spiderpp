@@ -23,6 +23,15 @@ public:
 	UrlList urlList(const LoadResult& hop);
 
 private:
+	enum class ResourceType
+	{
+		Html,
+		Css,
+		JavaScript,
+		Image,
+		Other
+	};
+
 	Url parseBaseTagValue() const;
 	ResourceType resourceType(const QString& contentType) const;
 

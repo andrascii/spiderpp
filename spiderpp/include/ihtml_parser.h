@@ -32,7 +32,6 @@ public:
 
 	// TODO: this method must not be in this interface
 	// we need to implement them using matchNodesInDepth method
-	virtual std::vector<LinkInfo> pageUrlList(bool httpOrHttpsOnly) const = 0;
 	virtual std::vector<Url> dofollowAhrefs() const = 0;
 	virtual std::vector<Url> nofollowAhrefs() const = 0;
 	virtual std::vector<Url> hreflangs() const = 0;

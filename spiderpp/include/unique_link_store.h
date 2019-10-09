@@ -1,7 +1,6 @@
 #pragma once
 
 #include "crawler_request.h"
-#include "parsed_page.h"
 
 namespace spiderpp
 {

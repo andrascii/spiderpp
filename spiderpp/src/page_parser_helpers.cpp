@@ -1,4 +1,5 @@
 #include "page_parser_helpers.h"
+#include "url.h"
 
 namespace spiderpp
 {
@@ -89,14 +90,6 @@ void PageParserHelpers::resolveUrlList(const Url& baseUrl, std::vector<Url>& url
 		url = resolveUrl(baseUrl, url);
 	}
 
-}
-
-void PageParserHelpers::resolveUrlList(const Url& baseUrl, std::vector<LinkInfo>& linkList) noexcept
-{
-	for (LinkInfo& link : linkList)
-	{
-		link.url = resolveUrl(baseUrl, link.url);
-	}
 }
 
 Url PageParserHelpers::resolveUrl(const Url& baseUrl, const Url& url) noexcept

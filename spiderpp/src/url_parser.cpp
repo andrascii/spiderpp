@@ -2,7 +2,6 @@
 #include "url.h"
 #include "load_result.h"
 #include "myhtml_parser.h"
-#include "parsed_page.h"
 #include "page_parser_helpers.h"
 
 namespace spiderpp
@@ -23,7 +22,7 @@ UrlParser::UrlList UrlParser::urlList(const LoadResult& hop)
 	const std::vector<QString> contentTypeValues = hop.responseHeaders().valueOf("content-type");
 	const QString& contentType = contentTypeValues.empty() ? QString() : contentTypeValues.front();
 
-	if (resourceType(contentType) != ResourceType::ResourceHtml)
+	if (resourceType(contentType) != ResourceType::Html)
 	{
 		return result;
 	}
@@ -71,31 +70,31 @@ Url UrlParser::parseBaseTagValue() const
 	return Url();
 }
 
-ResourceType UrlParser::resourceType(const QString& contentType) const
+UrlParser::ResourceType UrlParser::resourceType(const QString& contentType) const
 {
 	if (contentType.contains("javascript"))
 	{
-		return ResourceType::ResourceJavaScript;
+		return ResourceType::JavaScript;
 	}
 
 	if (contentType.startsWith("image/"))
 	{
-		return ResourceType::ResourceImage;
+		return ResourceType::Image;
 	}
 
 	if (contentType == "text/css")
 	{
-		return ResourceType::ResourceStyleSheet;
+		return ResourceType::Css;
 	}
 
 	if (PageParserHelpers::isHtmlOrPlainContentType(contentType))
 	{
-		return ResourceType::ResourceHtml;
+		return ResourceType::Html;
 	}
 
 	WARNLOG << "Unknown resource type:" << contentType;
 
-	return ResourceType::ResourceOther;
+	return ResourceType::Other;
 }
 
 }
