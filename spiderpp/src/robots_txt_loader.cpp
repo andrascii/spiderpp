@@ -34,7 +34,7 @@ void RobotsTxtLoader::load()
 		return;
 	}
 
-	CrawlerRequest requestInfo{ robotsTxtUrl, DownloadRequestType::RequestTypeGet };
+	DataToLoad requestInfo{ robotsTxtUrl, HttpLoadType::RequestTypeGet };
 	DownloadRequest request(requestInfo);
 	m_downloadRequester.reset(request, this, &RobotsTxtLoader::onLoadingDone);
 	m_downloadRequester->start();

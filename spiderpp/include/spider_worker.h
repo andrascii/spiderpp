@@ -1,7 +1,7 @@
 #pragma once
 
 #include "robots_txt_rules.h"
-#include "crawler_request.h"
+#include "data_to_load.h"
 #include "crawler_options.h"
 #include "options_link_filter.h"
 #include "url_parser.h"
@@ -33,12 +33,12 @@ public slots:
 private slots:
 	void extractUrlAndDownload();
 	void onAllLoadedDataToBeCleared();
-	void onLoadingDone(RedirectChain& redirectChain, DownloadRequestType requestType);
+	void onLoadingDone(RedirectChain& redirectChain, HttpLoadType requestType);
 
 private:
 	bool isExcludedByRegexp(const Url& url) const;
 	//void fixDDOSGuardRedirectsIfNeeded(std::vector<ParsedPagePtr>& pages) const;
-	void handleResponse(RedirectChain& redirectChain, DownloadRequestType requestType);
+	void handleResponse(RedirectChain& redirectChain, HttpLoadType requestType);
 	void handlePage(const LoadResult& loadResult);
 
 private:

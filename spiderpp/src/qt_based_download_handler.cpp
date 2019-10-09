@@ -217,7 +217,7 @@ void QtBasedDownloadHandler::processReply(QNetworkReply* reply)
 	markReplyAsProcessed(reply);
 	reply->disconnect(this);
 
-	const DownloadRequestType requestType = static_cast<DownloadRequestType>(reply->property("crawlerRequestType").toInt());
+	const HttpLoadType requestType = static_cast<HttpLoadType>(reply->property("crawlerRequestType").toInt());
 	Common::StatusCode statusCode = replyStatusCode(reply);
 	const int requestId = reply->property("requestId").toInt();
 
@@ -260,7 +260,7 @@ void QtBasedDownloadHandler::processReply(QNetworkReply* reply)
 
 			if (urlsInChain <= 2)
 			{
-				const CrawlerRequest redirectKey{ redirectUrlAddress, requestType };
+				const DataToLoad redirectKey{ redirectUrlAddress, requestType };
 				loadHelper(redirectKey, requestId, reply->property("useTimeout").isValid());
 				response->redirectChain.addLoadResult(LoadResult{ reply->url(), redirectUrlAddress, statusCode, body, reply->rawHeaderPairs(), -1 });
 				return;
@@ -312,7 +312,7 @@ void QtBasedDownloadHandler::load(RequesterSharedPtr requester)
 	m_activeRequestersReplies[requester] = reply;
 }
 
-std::pair<int, QNetworkReply*> QtBasedDownloadHandler::loadHelper(const CrawlerRequest& request, int parentRequestId, bool useTimeout)
+std::pair<int, QNetworkReply*> QtBasedDownloadHandler::loadHelper(const DataToLoad& request, int parentRequestId, bool useTimeout)
 {
 	static int s_request_id = 0;
 	QNetworkReply* reply = nullptr;
@@ -321,12 +321,12 @@ std::pair<int, QNetworkReply*> QtBasedDownloadHandler::loadHelper(const CrawlerR
 
 	switch (request.requestType)
 	{
-		case DownloadRequestType::RequestTypeGet:
+		case HttpLoadType::RequestTypeGet:
 		{
 			reply = m_networkAccessor->get(networkRequest);
 			break;
 		}
-		case DownloadRequestType::RequestTypeHead:
+		case HttpLoadType::RequestTypeHead:
 		{
 			reply = m_networkAccessor->head(networkRequest);
 			break;

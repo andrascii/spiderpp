@@ -1,6 +1,6 @@
 #pragma once
 
-#include "crawler_request.h"
+#include "data_to_load.h"
 
 namespace spiderpp
 {
@@ -16,29 +16,29 @@ class UniqueLinkStore : public QObject
 public:
 	UniqueLinkStore(QObject* parent);
 
-	bool extractUrl(CrawlerRequest& crawlerRequest) noexcept;
+	bool extractUrl(DataToLoad& crawlerRequest) noexcept;
 
-	void addUrl(const Url& url, DownloadRequestType requestType);
-	void addUrl(Url&& url, DownloadRequestType requestType);
-	void addUrlList(std::vector<Url> urlList, DownloadRequestType requestType);
+	void addUrl(const Url& url, HttpLoadType requestType);
+	void addUrl(Url&& url, HttpLoadType requestType);
+	void addUrlList(std::vector<Url> urlList, HttpLoadType requestType);
 
-	bool addCrawledUrl(const Url& url, DownloadRequestType requestType);
-	bool hasCrawledRequest(const CrawlerRequest& request);
+	bool addCrawledUrl(const Url& url, HttpLoadType requestType);
+	bool hasCrawledRequest(const DataToLoad& request);
 
-	void activeRequestReceived(const CrawlerRequest& request);
+	void activeRequestReceived(const DataToLoad& request);
 	void setLimitCrawledLinksCount(int value) noexcept;
 
 	size_t crawledCount() const noexcept;
 	size_t pendingCount() const noexcept;
 	size_t activeUrlCount() const noexcept;
-	std::vector<CrawlerRequest> pendingAndActiveUrls() const;
+	std::vector<DataToLoad> pendingAndActiveUrls() const;
 
-	std::vector<CrawlerRequest> pendingUrls() const;
-	void setPendingUrls(const std::vector<CrawlerRequest>& urls);
+	std::vector<DataToLoad> pendingUrls() const;
+	void setPendingUrls(const std::vector<DataToLoad>& urls);
 	void clearPending();
 
-	std::vector<CrawlerRequest> crawledUrls() const;
-	void setCrawledUrls(const std::vector<CrawlerRequest>& urls);
+	std::vector<DataToLoad> crawledUrls() const;
+	void setCrawledUrls(const std::vector<DataToLoad>& urls);
 
 	void clear();
 
@@ -46,12 +46,12 @@ signals:
 	void urlAdded();
 
 private:
-	void addUrlInternal(CrawlerRequest&& request);
+	void addUrlInternal(DataToLoad&& request);
 
 private:
 	struct UrlListItemHasher
 	{
-		size_t operator()(const CrawlerRequest& item) const noexcept
+		size_t operator()(const DataToLoad& item) const noexcept
 		{
 			return hasher(item.url.urlStr().toStdString()) + static_cast<size_t>(item.requestType);
 		}
@@ -59,7 +59,7 @@ private:
 		boost::hash<std::string> hasher;
 	};
 
-	using UrlList = std::unordered_set<CrawlerRequest, UrlListItemHasher>;
+	using UrlList = std::unordered_set<DataToLoad, UrlListItemHasher>;
 
 	UrlList m_pendingUrlList;
 	UrlList m_crawledUrlList;

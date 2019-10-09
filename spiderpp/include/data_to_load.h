@@ -6,23 +6,23 @@
 namespace spiderpp
 {
 
-enum class DownloadRequestType
+enum class HttpLoadType
 {
 	RequestTypeGet,
 	RequestTypeHead
 };
 
-struct CrawlerRequest
+struct DataToLoad
 {
 	Url url;
-	DownloadRequestType requestType;
+	HttpLoadType requestType;
 
-	bool operator==(const CrawlerRequest& other) const
+	bool operator==(const DataToLoad& other) const
 	{
 		return requestType == other.requestType && url.compare(other.url);
 	}
 
-	friend bool operator<(const CrawlerRequest& lhs, const CrawlerRequest& rhs)
+	friend bool operator<(const DataToLoad& lhs, const DataToLoad& rhs)
 	{
 		return lhs.url < rhs.url;
 	}
@@ -30,7 +30,7 @@ struct CrawlerRequest
 
 struct CrawlerRequestHasher
 {
-	size_t operator()(const CrawlerRequest& item) const noexcept
+	size_t operator()(const DataToLoad& item) const noexcept
 	{
 		return hasher(item.url.toString().toStdString()) + static_cast<size_t>(item.requestType);
 	}
@@ -38,8 +38,8 @@ struct CrawlerRequestHasher
 	boost::hash<std::string> hasher;
 };
 
-bool operator<(const CrawlerRequest& lhs, const CrawlerRequest& rhs);
+bool operator<(const DataToLoad& lhs, const DataToLoad& rhs);
 
 }
 
-Q_DECLARE_METATYPE(spiderpp::DownloadRequestType)
+Q_DECLARE_METATYPE(spiderpp::HttpLoadType)

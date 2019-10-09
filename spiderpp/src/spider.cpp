@@ -205,7 +205,7 @@ void Spider::onCrawlingSessionInitialized()
 		VERIFY(QMetaObject::invokeMethod(m_downloader->qobject(), "resetProxy", Qt::BlockingQueuedConnection));
 	}
 
-	m_uniqueLinkStore->addUrl(m_options->startCrawlingPage(), DownloadRequestType::RequestTypeGet);
+	m_uniqueLinkStore->addUrl(m_options->startCrawlingPage(), HttpLoadType::RequestTypeGet);
 
 	for (SpiderWorker* worker : m_workers)
 	{

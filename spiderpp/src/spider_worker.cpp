@@ -43,11 +43,11 @@ SpiderWorker::SpiderWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader* 
 	m_pageLoader->qobject()->setParent(this);
 
 	ASSERT(qRegisterMetaType<RedirectChain>("RedirectChain"));
-	ASSERT(qRegisterMetaType<DownloadRequestType>("DownloadRequestType"));
+	ASSERT(qRegisterMetaType<HttpLoadType>("DownloadRequestType"));
 	ASSERT(qRegisterMetaType<LoadResult>());
 
-	VERIFY(connect(m_pageLoader->qobject(), SIGNAL(pageLoaded(RedirectChain&, DownloadRequestType)),
-		this, SLOT(onLoadingDone(RedirectChain&, DownloadRequestType)), Qt::QueuedConnection));
+	VERIFY(connect(m_pageLoader->qobject(), SIGNAL(pageLoaded(RedirectChain&, HttpLoadType)),
+		this, SLOT(onLoadingDone(RedirectChain&, HttpLoadType)), Qt::QueuedConnection));
 
 	VERIFY(connect(m_uniqueLinkStore, &UniqueLinkStore::urlAdded, this,
 		&SpiderWorker::extractUrlAndDownload, Qt::QueuedConnection));
@@ -100,7 +100,7 @@ void SpiderWorker::extractUrlAndDownload()
 		return;
 	}
 
-	CrawlerRequest crawlerRequest;
+	DataToLoad crawlerRequest;
 
 	if (!m_pageLoader->canPullLoading() || !m_isRunning)
 	{
@@ -136,14 +136,14 @@ bool SpiderWorker::isExcludedByRegexp(const Url& url) const
 	return false;
 }
 
-void SpiderWorker::onLoadingDone(RedirectChain& redirectChain, DownloadRequestType requestType)
+void SpiderWorker::onLoadingDone(RedirectChain& redirectChain, HttpLoadType requestType)
 {
-	CrawlerRequest readyRequest = { redirectChain.firstLoadResult().url(), requestType };
+	DataToLoad readyRequest = { redirectChain.firstLoadResult().url(), requestType };
 	m_uniqueLinkStore->activeRequestReceived(readyRequest);
 
 	extractUrlAndDownload();
 
-	DEBUG_ASSERT(requestType != DownloadRequestType::RequestTypeHead || redirectChain.firstLoadResult().body().isEmpty());
+	DEBUG_ASSERT(requestType != HttpLoadType::RequestTypeHead || redirectChain.firstLoadResult().body().isEmpty());
 
 	handleResponse(redirectChain, requestType);
 }
@@ -170,7 +170,7 @@ void CrawlerWorker::fixDDOSGuardRedirectsIfNeeded(std::vector<ParsedPagePtr>& pa
 	}
 }*/
 
-void SpiderWorker::handleResponse(RedirectChain& redirectChain, DownloadRequestType requestType)
+void SpiderWorker::handleResponse(RedirectChain& redirectChain, HttpLoadType requestType)
 {
 	bool checkUrl = false;
 
@@ -206,8 +206,8 @@ void SpiderWorker::handlePage(const LoadResult& loadResult)
 			isExcludedByRegexp(url);
 	}));
 
-	m_uniqueLinkStore->addUrlList(std::move(urlList.dofollowAhrefs), DownloadRequestType::RequestTypeGet);
-	m_uniqueLinkStore->addUrlList(std::move(urlList.nofollowAhrefs), DownloadRequestType::RequestTypeGet);
+	m_uniqueLinkStore->addUrlList(std::move(urlList.dofollowAhrefs), HttpLoadType::RequestTypeGet);
+	m_uniqueLinkStore->addUrlList(std::move(urlList.nofollowAhrefs), HttpLoadType::RequestTypeGet);
 
 	if (!m_optionsData.crawlMetaHrefLangLinks)
 	{
@@ -220,7 +220,7 @@ void SpiderWorker::handlePage(const LoadResult& loadResult)
 			isExcludedByRegexp(url);
 	}));
 
-	m_uniqueLinkStore->addUrlList(std::move(urlList.hreflangs), DownloadRequestType::RequestTypeGet);
+	m_uniqueLinkStore->addUrlList(std::move(urlList.hreflangs), HttpLoadType::RequestTypeGet);
 }
 
 }

@@ -255,9 +255,9 @@ void MultiSocketDownloadHandler::removeRequestIndexesChain(int id)
 void MultiSocketDownloadHandler::followLocation(DownloadRequest::BodyProcessingCommand bodyProcessingCommand,
 	int parentRequestId,
 	const Url& redirectUrlAddress,
-	DownloadRequestType requestType)
+	HttpLoadType requestType)
 {
-	const CrawlerRequest redirectKey{ redirectUrlAddress, requestType };
+	const DataToLoad redirectKey{ redirectUrlAddress, requestType };
 	const int redirectionRequestId = loadHelper(redirectKey, bodyProcessingCommand);
 	m_redirectRequestIdToParentId[redirectionRequestId] = parentRequestId;
 	m_parentIdToRedirectIds[parentRequestId].append(redirectionRequestId);
@@ -407,7 +407,7 @@ void MultiSocketDownloadHandler::onUrlLoaded(int id,
 	}
 
 	const DownloadRequest* request = Common::Helpers::fast_cast<DownloadRequest*>(requester->request());
-	const DownloadRequestType requestType = request->requestInfo.requestType;
+	const HttpLoadType requestType = request->requestInfo.requestType;
 
 	const bool isRedirectionStatusCode =
 		statusCode == Common::StatusCode::MovedPermanently301 ||
@@ -488,18 +488,18 @@ void MultiSocketDownloadHandler::load(RequesterSharedPtr requester)
 	m_activeRequesters[requestId] = requester;
 }
 
-int MultiSocketDownloadHandler::loadHelper(const CrawlerRequest& request, DownloadRequest::BodyProcessingCommand bodyProcessingCommand)
+int MultiSocketDownloadHandler::loadHelper(const DataToLoad& request, DownloadRequest::BodyProcessingCommand bodyProcessingCommand)
 {
 	int requestId = 0;
 
 	switch (request.requestType)
 	{
-		case DownloadRequestType::RequestTypeGet:
+		case HttpLoadType::RequestTypeGet:
 		{
 			requestId = m_multiSocketLoader->get(request.url, bodyProcessingCommand);
 			break;
 		}
-		case DownloadRequestType::RequestTypeHead:
+		case HttpLoadType::RequestTypeHead:
 		{
 			requestId = m_multiSocketLoader->head(request.url);
 			break;

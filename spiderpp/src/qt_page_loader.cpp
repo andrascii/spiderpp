@@ -27,7 +27,7 @@ bool QtPageLoader::canPullLoading() const
 	return true;
 }
 
-void QtPageLoader::performLoading(const CrawlerRequest& crawlerRequest)
+void QtPageLoader::performLoading(const DataToLoad& crawlerRequest)
 {
 	DEBUG_ASSERT(m_state == CanReceivePages);
 

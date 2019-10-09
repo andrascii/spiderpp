@@ -1,7 +1,7 @@
 #pragma once
 
 #include "irequest.h"
-#include "crawler_request.h"
+#include "data_to_load.h"
 
 namespace spiderpp
 {
@@ -14,7 +14,7 @@ struct DownloadRequest : public IRequest
 		CommandAutoDetectionBodyLoading
 	};
 
-	DownloadRequest(const CrawlerRequest& requestInfo,
+	DownloadRequest(const DataToLoad& requestInfo,
 		BodyProcessingCommand bodyProcessingCommand = BodyProcessingCommand::CommandAutoDetectionBodyLoading,
 		bool useTimeout = false,
 		bool ignoreMaxParallelConnections = false)
@@ -35,7 +35,7 @@ struct DownloadRequest : public IRequest
 		return RequestType::RequestDownload;
 	}
 
-	CrawlerRequest requestInfo;
+	DataToLoad requestInfo;
 	BodyProcessingCommand bodyProcessingCommand;
 	int turnaround;
 

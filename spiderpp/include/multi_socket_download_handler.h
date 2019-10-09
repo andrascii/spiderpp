@@ -1,7 +1,7 @@
 #pragma once
 
 #include "requester.h"
-#include "crawler_request.h"
+#include "data_to_load.h"
 #include "abstract_download_handler.h"
 #include "download_request.h"
 #include "status_code.h"
@@ -51,7 +51,7 @@ private:
 	virtual void resetRequesters(const QList<Requester*>& requesterToReset) override;
 
 private:
-	int loadHelper(const CrawlerRequest& request, DownloadRequest::BodyProcessingCommand bodyProcessingCommand);
+	int loadHelper(const DataToLoad& request, DownloadRequest::BodyProcessingCommand bodyProcessingCommand);
 
 	//! extracts and returns the value of the Location header (resolves the location address by baseAddress)
 	Url redirectedUrl(const ResponseHeaders& responseHeaders, const Url& baseAddress) const;
@@ -71,7 +71,7 @@ private:
 	void followLocation(DownloadRequest::BodyProcessingCommand bodyProcessingCommand,
 		int parentRequestId,
 		const Url& redirectUrlAddress,
-		DownloadRequestType requestType);
+		HttpLoadType requestType);
 
 	//! true if redirectUrlAddress contains twice in the hopsChain
 	bool isRedirectLoop(const RedirectChain& hopsChain, const Url& redirectUrlAddress) const;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "requester.h"
-#include "crawler_request.h"
+#include "data_to_load.h"
 #include "abstract_download_handler.h"
 #include "status_code.h"
 
@@ -46,7 +46,7 @@ private:
 	void processReply(QNetworkReply* reply);
 	bool isReplyProcessed(QNetworkReply* reply) const noexcept;
 	void markReplyAsProcessed(QNetworkReply* reply) noexcept;
-	std::pair<int, QNetworkReply*> loadHelper(const CrawlerRequest& request, int parentRequestId = -1, bool useTimeout = false);
+	std::pair<int, QNetworkReply*> loadHelper(const DataToLoad& request, int parentRequestId = -1, bool useTimeout = false);
 
 	QByteArray readBody(QNetworkReply* reply) const;
 	Common::StatusCode replyStatusCode(QNetworkReply* reply) const;

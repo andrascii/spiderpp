@@ -21,13 +21,13 @@ public:
 	MultiRequestPageLoader(UniqueLinkStore* uniqueLinkStore, QObject* parent = nullptr);
 
 	virtual bool canPullLoading() const override;
-	virtual void performLoading(const CrawlerRequest& crawlerRequest) override;
+	virtual void performLoading(const DataToLoad& crawlerRequest) override;
 	virtual void setReceiveState(ReceiveState state) override;
 	virtual void clear() override;
 	virtual QObject* qobject() override;
 
 signals:
-	virtual void pageLoaded(RedirectChain& redirectChain, DownloadRequestType requestType) override;
+	virtual void pageLoaded(RedirectChain& redirectChain, HttpLoadType requestType) override;
 
 private:
 	void onLoadingDone(Requester* requester, DownloadResponse& response);

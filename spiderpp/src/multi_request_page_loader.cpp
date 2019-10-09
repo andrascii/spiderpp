@@ -66,7 +66,7 @@ bool MultiRequestPageLoader::canPullLoading() const
 	return true;
 }
 
-void MultiRequestPageLoader::performLoading(const CrawlerRequest& crawlerRequest)
+void MultiRequestPageLoader::performLoading(const DataToLoad& crawlerRequest)
 {
 	DEBUG_ASSERT(m_state == CanReceivePages);
 
