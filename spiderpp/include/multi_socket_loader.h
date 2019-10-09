@@ -15,7 +15,7 @@ namespace spiderpp
 {
 
 class Url;
-class HopsChain;
+class RedirectChain;
 
 /*! Information associated with a specific HTTP request */
 struct RequestDescriptor

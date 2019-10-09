@@ -1,6 +1,6 @@
 #pragma once
 
-#include "hops_chain.h"
+#include "redirect_chain.h"
 
 namespace spiderpp
 {
@@ -23,7 +23,7 @@ public:
 	virtual QObject* qobject() const = 0;
 
 	// signals
-	virtual void operationCompleted(const HopsChain& hopsChain) = 0;
+	virtual void operationCompleted(const RedirectChain& hopsChain) = 0;
 };
 
 }

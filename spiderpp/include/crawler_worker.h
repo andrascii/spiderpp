@@ -7,6 +7,7 @@
 #include "crawler_options.h"
 #include "options_link_filter.h"
 #include "url_parser.h"
+#include "load_result.h"
 
 namespace spiderpp
 {
@@ -14,8 +15,7 @@ namespace spiderpp
 class IWorkerPageLoader;
 class UniqueLinkStore;
 class PageDataCollector;
-class HopsChain;
-class Hop;
+class RedirectChain;
 struct DownloadResponse;
 
 class CrawlerWorker : public QObject
@@ -26,7 +26,7 @@ public:
 	CrawlerWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader* pageLoader);
 
 signals:
-	void workerResult(WorkerResult workerResult) const;
+	void onAboutLoadResult(LoadResult loadResult) const;
 
 public slots:
 	void reinitOptions(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules);
@@ -36,20 +36,13 @@ public slots:
 private slots:
 	void extractUrlAndDownload();
 	void onAllLoadedDataToBeCleared();
-	void onLoadingDone(HopsChain& hopsChain, DownloadRequestType requestType);
+	void onLoadingDone(RedirectChain& redirectChain, DownloadRequestType requestType);
 
 private:
-	struct SchedulePagesResult
-	{
-		std::vector<ResourceOnPage> blockedByRobotsTxtLinks;
-		std::vector<ResourceOnPage> tooLongLinks;
-	};
-
-
 	bool isExcludedByRegexp(const Url& url) const;
 	void fixDDOSGuardRedirectsIfNeeded(std::vector<ParsedPagePtr>& pages) const;
-	void handleResponse(HopsChain& hopsChain, DownloadRequestType requestType);
-	void handlePage(const Hop& loadResult);
+	void handleResponse(RedirectChain& redirectChain, DownloadRequestType requestType);
+	void handlePage(const LoadResult& loadResult);
 
 private:
 	UniqueLinkStore* m_uniqueLinkStore;

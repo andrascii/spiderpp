@@ -4,7 +4,7 @@ namespace spiderpp
 {
 
 class Url;
-class Hop;
+class LoadResult;
 class IHtmlParser;
 enum class ResourceType;
 
@@ -20,7 +20,7 @@ public:
 
 	UrlParser();
 
-	UrlList urlList(const Hop& hop);
+	UrlList urlList(const LoadResult& hop);
 
 private:
 	Url parseBaseTagValue() const;

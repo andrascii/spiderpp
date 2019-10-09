@@ -27,7 +27,7 @@ public:
 	virtual QObject* qobject() override;
 
 signals:
-	virtual void pageLoaded(HopsChain& hopsChain, DownloadRequestType requestType) override;
+	virtual void pageLoaded(RedirectChain& redirectChain, DownloadRequestType requestType) override;
 
 private:
 	void onLoadingDone(Requester* requester, DownloadResponse& response);

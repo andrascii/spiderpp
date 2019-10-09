@@ -1,6 +1,6 @@
 #include "url_parser.h"
 #include "url.h"
-#include "hop.h"
+#include "load_result.h"
 #include "myhtml_parser.h"
 #include "parsed_page.h"
 #include "page_parser_helpers.h"
@@ -14,7 +14,7 @@ UrlParser::UrlParser()
 {
 }
 
-UrlParser::UrlList UrlParser::urlList(const Hop& hop)
+UrlParser::UrlList UrlParser::urlList(const LoadResult& hop)
 {
 	UrlList result;
 

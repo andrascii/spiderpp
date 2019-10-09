@@ -28,7 +28,7 @@ void RobotsTxtLoader::load()
 {
 	const Url robotsTxtUrl = m_host.scheme() + "://" + m_host.host() + QStringLiteral("/robots.txt");
 
-	if (m_hopsChain.hasHopTo(robotsTxtUrl))
+	if (m_redirectChain.hasRedirectTo(robotsTxtUrl))
 	{
 		emit ready();
 		return;
@@ -73,21 +73,21 @@ QObject* RobotsTxtLoader::qobject()
 
 spiderpp::Url RobotsTxtLoader::robotsTxtUrl() const
 {
-	return !m_hopsChain.empty() ? m_hopsChain.lastHop().url() : Url();
+	return !m_redirectChain.empty() ? m_redirectChain.lastLoadResult().url() : Url();
 }
 
 void RobotsTxtLoader::onLoadingDone(Requester* requester, const DownloadResponse& response)
 {
 	Q_UNUSED(requester);
 
-	const Common::StatusCode statusCode = response.hopsChain.lastHop().statusCode();
+	const Common::StatusCode statusCode = response.redirectChain.lastLoadResult().statusCode();
 
 	m_isValid = statusCode == Common::StatusCode::Ok200;
 
-	m_content = response.hopsChain.lastHop().body();
+	m_content = response.redirectChain.lastLoadResult().body();
 	m_isReady = true;
 
-	m_hopsChain = response.hopsChain;
+	m_redirectChain = response.redirectChain;
 
 	emit ready();
 }

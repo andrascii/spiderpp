@@ -49,10 +49,6 @@ Crawler::Crawler(QObject* parent)
 	serviceLocator->addService<INotificationService>(new NotificationService);
 
 	ASSERT(s_instance == nullptr && "Allowed only one instance of Crawler");
-	ASSERT(qRegisterMetaType<WorkerResult>());
-	ASSERT(qRegisterMetaType<ParsedPagePtr>());
-	ASSERT(qRegisterMetaType<std::vector<ParsedPagePtr>>());
-	ASSERT(qRegisterMetaType<CrawlingProgress>());
 	ASSERT(qRegisterMetaType<CrawlerOptionsData>() > -1);
 	ASSERT(qRegisterMetaType<cpprobotparser::RobotsTxtRules>());
 
@@ -434,11 +430,6 @@ void Crawler::setWorkerCount(unsigned workerCount) noexcept
 bool Crawler::crawlingFinished() const noexcept
 {
 	return m_crawlingFinished;
-}
-
-bool Crawler::readyForRefreshPage() const noexcept
-{
-	return state() == StatePause || state() == StatePending;
 }
 
 }

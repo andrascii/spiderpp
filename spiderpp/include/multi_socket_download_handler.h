@@ -11,7 +11,7 @@ namespace spiderpp
 class ResponseHeaders;
 class RandomIntervalRangeTimer;
 class MultiSocketLoader;
-class HopsChain;
+class RedirectChain;
 struct DownloadResponse;
 
 class MultiSocketDownloadHandler : public AbstractDownloadHandler
@@ -73,7 +73,7 @@ private:
 		DownloadRequestType requestType);
 
 	//! true if redirectUrlAddress contains twice in the hopsChain
-	bool isRedirectLoop(const HopsChain& hopsChain, const Url& redirectUrlAddress) const;
+	bool isRedirectLoop(const RedirectChain& hopsChain, const Url& redirectUrlAddress) const;
 
 	//! returns the valid request indexes which should be paused
 	QVector<int> requestIndexesToPause() const;

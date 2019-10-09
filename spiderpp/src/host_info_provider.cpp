@@ -64,11 +64,11 @@ void HostInfoProvider::stopRequestHandling(RequesterSharedPtr requester)
 
 void HostInfoProvider::onLoadingDone(Requester*, const DownloadResponse& response)
 {
-	m_pendingResponse->url = response.hopsChain.firstHop().url();
+	m_pendingResponse->url = response.redirectChain.firstLoadResult().url();
 
-	if (response.hopsChain.length() > 1)
+	if (response.redirectChain.length() > 1)
 	{
-		const Hop& hop = response.hopsChain.lastHop();
+		const LoadResult& hop = response.redirectChain.lastLoadResult();
 		const QUrl& originalUrl = m_pendingResponse->url;
 		const QUrl& redirectedUrl = hop.url();
 

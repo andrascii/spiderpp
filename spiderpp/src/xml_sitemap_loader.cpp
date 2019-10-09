@@ -51,7 +51,7 @@ void XmlSitemapLoader::load()
 		sitemapUrl = m_host.scheme() + "://" + m_host.host() + QStringLiteral("/sitemap.xml");
 	}
 
-	if (m_isValid || m_hopsChain.hasHopTo(sitemapUrl))
+	if (m_isValid || m_hopsChain.hasRedirectTo(sitemapUrl))
 	{
 		emit ready();
 		return;
@@ -104,14 +104,14 @@ void XmlSitemapLoader::onLoadingDone(Requester* requester, const DownloadRespons
 {
 	Q_UNUSED(requester);
 
-	const Common::StatusCode statusCode = response.hopsChain.lastHop().statusCode();
+	const Common::StatusCode statusCode = response.redirectChain.lastLoadResult().statusCode();
 
 	m_isValid = statusCode == Common::StatusCode::Ok200;
 
-	m_content = response.hopsChain.lastHop().body();
+	m_content = response.redirectChain.lastLoadResult().body();
 	m_isReady = true;
 
-	m_hopsChain = response.hopsChain;
+	m_hopsChain = response.redirectChain;
 
 	emit ready();
 }

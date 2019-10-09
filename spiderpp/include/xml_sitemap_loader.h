@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ispecific_loader.h"
-#include "hops_chain.h"
+#include "redirect_chain.h"
 #include "requester_wrapper.h"
 #include "url.h"
 
@@ -42,7 +42,7 @@ private:
 	bool m_isReady;
 	bool m_isValid;
 	QByteArray m_content;
-	HopsChain m_hopsChain;
+	RedirectChain m_hopsChain;
 	RequesterWrapper m_downloadRequester;
 	RobotsTxtLoader* m_robotsTxtLoader;
 	Url m_host;

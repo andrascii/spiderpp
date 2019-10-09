@@ -2,7 +2,7 @@
 
 #include "iresponse.h"
 #include "response_headers.h"
-#include "hops_chain.h"
+#include "redirect_chain.h"
 
 namespace spiderpp
 {
@@ -16,7 +16,7 @@ struct DownloadResponse : public IResponse
 
 	DEFINE_RESPONSE_STATIC_TYPE_IN_CLASS(ResponseType::ResponseTypeDownload)
 
-	HopsChain hopsChain;
+	RedirectChain redirectChain;
 };
 
 struct DownloadProgressResponse : public IResponse

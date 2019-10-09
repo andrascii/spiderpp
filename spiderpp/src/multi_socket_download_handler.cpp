@@ -264,9 +264,9 @@ void MultiSocketDownloadHandler::followLocation(DownloadRequest::BodyProcessingC
 }
 
 //! true if redirectUrlAddress contains twice in the hopsChain
-bool MultiSocketDownloadHandler::isRedirectLoop(const HopsChain& hopsChain, const Url& redirectUrlAddress) const
+bool MultiSocketDownloadHandler::isRedirectLoop(const RedirectChain& hopsChain, const Url& redirectUrlAddress) const
 {
-	const auto urlComparator = [&redirectUrlAddress](const Hop& hop)
+	const auto urlComparator = [&redirectUrlAddress](const LoadResult& hop)
 	{
 		return hop.url() == redirectUrlAddress;
 	};
@@ -418,7 +418,7 @@ void MultiSocketDownloadHandler::onUrlLoaded(int id,
 	const Url loadedResourceUrl(url);
 	const Url redirectUrlAddress = redirectedUrl(responseHeaders, loadedResourceUrl);
 
-	response->hopsChain.addHop(Hop(loadedResourceUrl, redirectUrlAddress, statusCode, data, responseHeaders, timeElapsed));
+	response->redirectChain.addLoadResult(LoadResult(loadedResourceUrl, redirectUrlAddress, statusCode, data, responseHeaders, timeElapsed));
 
 	if (isRedirectionStatusCode)
 	{
@@ -428,11 +428,11 @@ void MultiSocketDownloadHandler::onUrlLoaded(int id,
 			<< " was redirected to: "
 			<< redirectUrlAddress.urlStr();
 
-		if (response->hopsChain.length() == static_cast<size_t>(maxRedirectsToProcess()))
+		if (response->redirectChain.length() == static_cast<size_t>(maxRedirectsToProcess()))
 		{
 			statusCode = Common::StatusCode::TooManyRedirections;
 		}
-		else if (isRedirectLoop(response->hopsChain, redirectUrlAddress))
+		else if (isRedirectLoop(response->redirectChain, redirectUrlAddress))
 		{
 			statusCode = Common::StatusCode::RedirectLoop;
 

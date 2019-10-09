@@ -46,7 +46,7 @@ void MultiRequestPageLoader::onLoadingDone(Requester* requester, DownloadRespons
 	const DownloadRequest* downloadRequest =
 		Common::Helpers::fast_cast<DownloadRequest*>(requester->request());
 
-	emit pageLoaded(response.hopsChain, downloadRequest->requestInfo.requestType);
+	emit pageLoaded(response.redirectChain, downloadRequest->requestInfo.requestType);
 
 	removeRequesterAssociatedData(requester);
 }

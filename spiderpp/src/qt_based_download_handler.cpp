@@ -4,7 +4,7 @@
 #include "thread_message_dispatcher.h"
 #include "page_parser_helpers.h"
 #include "status_code.h"
-#include "hop.h"
+#include "load_result.h"
 #include "service_locator.h"
 #include "inotification_service.h"
 #include "random_interval_range_timer.h"
@@ -242,7 +242,7 @@ void QtBasedDownloadHandler::processReply(QNetworkReply* reply)
 	if (statusCode == Common::StatusCode::MovedPermanently301 ||
 		statusCode == Common::StatusCode::MovedTemporarily302)
 	{
-		if (response->hopsChain.length() == static_cast<size_t>(maxRedirectsToProcess()))
+		if (response->redirectChain.length() == static_cast<size_t>(maxRedirectsToProcess()))
 		{
 			statusCode = Common::StatusCode::TooManyRedirections;
 			body = QByteArray();
@@ -250,9 +250,9 @@ void QtBasedDownloadHandler::processReply(QNetworkReply* reply)
 		else
 		{
 			int urlsInChain = 0;
-			for (size_t i = 0; i < response->hopsChain.length(); ++i)
+			for (size_t i = 0; i < response->redirectChain.length(); ++i)
 			{
-				if (response->hopsChain[i].url() == redirectUrlAddress)
+				if (response->redirectChain[i].url() == redirectUrlAddress)
 				{
 					urlsInChain += 1;
 				}
@@ -262,13 +262,13 @@ void QtBasedDownloadHandler::processReply(QNetworkReply* reply)
 			{
 				const CrawlerRequest redirectKey{ redirectUrlAddress, requestType };
 				loadHelper(redirectKey, requestId, reply->property("useTimeout").isValid());
-				response->hopsChain.addHop(Hop{ reply->url(), redirectUrlAddress, statusCode, body, reply->rawHeaderPairs(), -1 });
+				response->redirectChain.addLoadResult(LoadResult{ reply->url(), redirectUrlAddress, statusCode, body, reply->rawHeaderPairs(), -1 });
 				return;
 			}
 		}
 	}
 
-	response->hopsChain.addHop(Hop(reply->url(), redirectUrlAddress, statusCode, body, reply->rawHeaderPairs(), -1));
+	response->redirectChain.addLoadResult(LoadResult(reply->url(), redirectUrlAddress, statusCode, body, reply->rawHeaderPairs(), -1));
 	ThreadMessageDispatcher::forThread(requester->thread())->postResponse(requester, response);
 
 	const auto iter = m_activeRequestersReplies.find(requester);

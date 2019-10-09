@@ -27,12 +27,6 @@ class IScreenshotMaker;
 struct SiteMapSettings;
 struct GetHostInfoResponse;
 
-struct CrawlingProgress
-{
-	size_t crawledLinkCount;
-	size_t pendingLinkCount;
-};
-
 class Crawler : public QObject
 {
 	Q_OBJECT
@@ -79,7 +73,6 @@ public:
 	std::optional<QByteArray> currentCrawledSiteIPv4() const;
 
 	QString currentCrawledUrl() const noexcept;
-	bool readyForRefreshPage() const noexcept;
 	ICrawlerOptions* options() const noexcept;
 
 	size_t scannedPagesCount() const;
@@ -88,7 +81,6 @@ public:
 	bool crawlingFinished() const noexcept;
 
 signals:
-	void crawlingProgress(CrawlingProgress progress);
 	void crawlerStarted();
 	void crawlerStopped();
 	void crawlerFinished();
@@ -101,9 +93,6 @@ public slots:
 	void startCrawling();
 	void stopCrawling();
 	void setUserAgent(const QByteArray& userAgent);
-
-protected slots:
-	void onRefreshPageDone();
 
 private slots:
 	void onCrawlingSessionInitialized();
@@ -157,5 +146,3 @@ private:
 };
 
 }
-
-Q_DECLARE_METATYPE(spiderpp::CrawlingProgress)

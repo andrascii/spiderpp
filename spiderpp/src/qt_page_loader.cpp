@@ -60,7 +60,7 @@ void QtPageLoader::onLoadingDone(Requester* requester, DownloadResponse& respons
 	const DownloadRequest* downloadRequest =
 		Common::Helpers::fast_cast<DownloadRequest*>(requester->request());
 
-	emit pageLoaded(response.hopsChain, downloadRequest->requestInfo.requestType);
+	emit pageLoaded(response.redirectChain, downloadRequest->requestInfo.requestType);
 
 	m_requester.reset();
 }

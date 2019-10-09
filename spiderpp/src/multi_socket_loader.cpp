@@ -1,7 +1,7 @@
 #include "multi_socket_loader.h"
 #include "page_parser_helpers.h"
 #include "status_code_description.h"
-#include "hops_chain.h"
+#include "redirect_chain.h"
 
 namespace
 {

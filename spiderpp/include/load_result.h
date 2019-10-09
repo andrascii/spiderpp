@@ -7,12 +7,12 @@
 namespace spiderpp
 {
 
-class Hop final
+class LoadResult final
 {
 public:
-	Hop() = default;
+	LoadResult() = default;
 
-	Hop(
+	LoadResult(
 		const Url& url,
 		const Url& redirectUrl,
 		Common::StatusCode statusCode,
@@ -53,3 +53,5 @@ private:
 };
 
 }
+
+Q_DECLARE_METATYPE(spiderpp::LoadResult)

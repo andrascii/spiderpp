@@ -3,7 +3,7 @@
 #include "crawler_request.h"
 #include "worker_result.h"
 #include "download_request.h"
-#include "hops_chain.h"
+#include "redirect_chain.h"
 
 namespace spiderpp
 {
@@ -30,7 +30,7 @@ public:
 	virtual QObject* qobject() = 0;
 
 	// signals
-	virtual void pageLoaded(HopsChain& hopsChain, DownloadRequestType requestType) = 0;
+	virtual void pageLoaded(RedirectChain& redirectChain, DownloadRequestType requestType) = 0;
 };
 
 }

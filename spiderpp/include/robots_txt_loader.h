@@ -2,7 +2,7 @@
 
 #include "ispecific_loader.h"
 #include "requester_wrapper.h"
-#include "hops_chain.h"
+#include "redirect_chain.h"
 #include "url.h"
 
 namespace spiderpp
@@ -39,7 +39,7 @@ private:
 	bool m_isReady;
 	bool m_isValid;
 	QByteArray m_content;
-	HopsChain m_hopsChain;
+	RedirectChain m_redirectChain;
 	RequesterWrapper m_downloadRequester;
 	Url m_host;
 };

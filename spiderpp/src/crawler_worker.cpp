@@ -10,8 +10,6 @@
 #include "iworker_page_loader.h"
 #include "url_parser.h"
 
-Q_DECLARE_METATYPE(std::vector<bool>)
-
 namespace
 {
 
@@ -44,12 +42,12 @@ CrawlerWorker::CrawlerWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader
 {
 	m_pageLoader->qobject()->setParent(this);
 
-	qRegisterMetaType<HopsChain>("HopsChain");
-	qRegisterMetaType<std::vector<bool>>("std::vector<bool>");
-	qRegisterMetaType<DownloadRequestType>("DownloadRequestType");
+	ASSERT(qRegisterMetaType<RedirectChain>("RedirectChain"));
+	ASSERT(qRegisterMetaType<DownloadRequestType>("DownloadRequestType"));
+	ASSERT(qRegisterMetaType<LoadResult>());
 
-	VERIFY(connect(m_pageLoader->qobject(), SIGNAL(pageLoaded(const HopsChain&, int, bool, const std::vector<bool>&, DownloadRequestType)),
-		this, SLOT(onLoadingDone(const HopsChain&, int, bool, const std::vector<bool>&, DownloadRequestType)), Qt::QueuedConnection));
+	VERIFY(connect(m_pageLoader->qobject(), SIGNAL(pageLoaded(RedirectChain&, DownloadRequestType)),
+		this, SLOT(onLoadingDone(RedirectChain&, DownloadRequestType)), Qt::QueuedConnection));
 
 	VERIFY(connect(m_uniqueLinkStore, &UniqueLinkStore::urlAdded, this,
 		&CrawlerWorker::extractUrlAndDownload, Qt::QueuedConnection));
@@ -138,14 +136,14 @@ bool CrawlerWorker::isExcludedByRegexp(const Url& url) const
 	return false;
 }
 
-void CrawlerWorker::onLoadingDone(HopsChain& redirectChain, DownloadRequestType requestType)
+void CrawlerWorker::onLoadingDone(RedirectChain& redirectChain, DownloadRequestType requestType)
 {
-	CrawlerRequest readyRequest = { redirectChain.firstHop().url(), requestType };
+	CrawlerRequest readyRequest = { redirectChain.firstLoadResult().url(), requestType };
 	m_uniqueLinkStore->activeRequestReceived(readyRequest);
 
 	extractUrlAndDownload();
 
-	DEBUG_ASSERT(requestType != DownloadRequestType::RequestTypeHead || redirectChain.firstHop().body().isEmpty());
+	DEBUG_ASSERT(requestType != DownloadRequestType::RequestTypeHead || redirectChain.firstLoadResult().body().isEmpty());
 
 	handleResponse(redirectChain, requestType);
 }
@@ -171,13 +169,13 @@ void CrawlerWorker::fixDDOSGuardRedirectsIfNeeded(std::vector<ParsedPagePtr>& pa
 	}
 }
 
-void CrawlerWorker::handleResponse(HopsChain& hopsChain, DownloadRequestType requestType)
+void CrawlerWorker::handleResponse(RedirectChain& redirectChain, DownloadRequestType requestType)
 {
 	bool checkUrl = false;
 
 	//fixDDOSGuardRedirectsIfNeeded(pages);
 
-	for (Hop& loadResult : hopsChain)
+	for (LoadResult& loadResult : redirectChain)
 	{
 		if (checkUrl && !loadResult.url().fragment().isEmpty())
 		{
@@ -191,7 +189,7 @@ void CrawlerWorker::handleResponse(HopsChain& hopsChain, DownloadRequestType req
 	}
 }
 
-void CrawlerWorker::handlePage(const Hop& loadResult)
+void CrawlerWorker::handlePage(const LoadResult& loadResult)
 {
 	UrlParser::UrlList urlList = m_urlParser.urlList(loadResult);
 
