@@ -14,7 +14,7 @@ class CrawlerWorker;
 class Requester;
 class IWorkerPageLoader;
 
-class Crawler : public QObject
+class Spider : public QObject
 {
 	Q_OBJECT
 
@@ -43,10 +43,10 @@ public:
 		DownloaderTypeQNetworkAccessManager
 	};
 
-	static Crawler& instance();
+	static Spider& instance();
 
-	Crawler(QObject* parent = nullptr);
-	virtual ~Crawler();
+	Spider(QObject* parent = nullptr);
+	virtual ~Spider();
 
 	void setDownloaderType(DownloaderType type);
 
@@ -96,7 +96,7 @@ private:
 	unsigned workerCount() const noexcept;
 
 private:
-	static Crawler* s_instance;
+	static Spider* s_instance;
 
 	ISpecificLoader* m_robotsTxtLoader;
 	UniqueLinkStore* m_uniqueLinkStore;

@@ -5,7 +5,7 @@
 #include "download_response.h"
 #include "service_locator.h"
 #include "common_constants.h"
-#include "crawler.h"
+#include "spider.h"
 #include "finally.h"
 #include "iworker_page_loader.h"
 #include "url_parser.h"
@@ -52,7 +52,7 @@ CrawlerWorker::CrawlerWorker(UniqueLinkStore* uniqueLinkStore, IWorkerPageLoader
 	VERIFY(connect(m_uniqueLinkStore, &UniqueLinkStore::urlAdded, this,
 		&CrawlerWorker::extractUrlAndDownload, Qt::QueuedConnection));
 
-	VERIFY(connect(&Crawler::instance(), &Crawler::onAboutClearData,
+	VERIFY(connect(&Spider::instance(), &Spider::onAboutClearData,
 		this, &CrawlerWorker::onAllLoadedDataToBeCleared, Qt::QueuedConnection));
 
 	VERIFY(connect(m_defferedProcessingTimer, &QTimer::timeout,

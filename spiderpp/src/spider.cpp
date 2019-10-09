@@ -1,4 +1,4 @@
-#include "crawler.h"
+#include "spider.h"
 #include "crawler_worker.h"
 #include "thread_manager.h"
 #include "qt_based_download_handler.h"
@@ -15,14 +15,14 @@
 namespace spiderpp
 {
 
-Crawler* Crawler::s_instance = nullptr;
+Spider* Spider::s_instance = nullptr;
 
-Crawler& Crawler::instance()
+Spider& Spider::instance()
 {
 	return *s_instance;
 }
 
-Crawler::Crawler(QObject* parent)
+Spider::Spider(QObject* parent)
 	: QObject(parent)
 	, m_robotsTxtLoader(new RobotsTxtLoader(this))
 	, m_uniqueLinkStore(nullptr)
@@ -52,7 +52,7 @@ Crawler::Crawler(QObject* parent)
 	s_instance = this;
 }
 
-Crawler::~Crawler()
+Spider::~Spider()
 {
 	for (CrawlerWorker* worker : m_workers)
 	{
@@ -66,13 +66,13 @@ Crawler::~Crawler()
 	ServiceLocator::instance()->destroyService<INotificationService>();
 }
 
-void Crawler::setDownloaderType(DownloaderType type)
+void Spider::setDownloaderType(DownloaderType type)
 {
 	ASSERT(type == DownloaderTypeLibCurlMultiSocket || type == DownloaderTypeQNetworkAccessManager);
 	m_downloaderType = type;
 }
 
-void Crawler::initialize()
+void Spider::initialize()
 {
 	m_downloader = createDownloader();
 
@@ -88,7 +88,7 @@ void Crawler::initialize()
 	}
 }
 
-void Crawler::clearData()
+void Spider::clearData()
 {
 	ASSERT(state() == StatePending || state() == StatePause);
 
@@ -99,20 +99,20 @@ void Crawler::clearData()
 	emit onAboutClearData();
 }
 
-void Crawler::clearDataImpl()
+void Spider::clearDataImpl()
 {
 	m_crawlingFinished = false;
 	m_uniqueLinkStore->clear();
 }
 
-void Crawler::setState(State state)
+void Spider::setState(State state)
 {
 	m_prevState = m_state;
 	m_state = state;
 	emit stateChanged(state);
 }
 
-unsigned Crawler::workerCount() const noexcept
+unsigned Spider::workerCount() const noexcept
 {
 	const unsigned hardwareConcurrency = std::thread::hardware_concurrency();
 
@@ -124,12 +124,12 @@ unsigned Crawler::workerCount() const noexcept
 	return m_theradCount;
 }
 
-Crawler::State Crawler::state() const noexcept
+Spider::State Spider::state() const noexcept
 {
 	return m_state;
 }
 
-void Crawler::startCrawling()
+void Spider::startCrawling()
 {
 	m_crawlingFinished = false;
 	setState(StatePreChecking);
@@ -161,7 +161,7 @@ void Crawler::startCrawling()
 	tryToLoadCrawlingDependencies();
 }
 
-void Crawler::stopCrawling()
+void Spider::stopCrawling()
 {
 	if (state() == StatePause || state() == StatePending)
 	{
@@ -181,7 +181,7 @@ void Crawler::stopCrawling()
 	serviceLocator->service<INotificationService>()->info(tr("Crawler state"), tr("Crawler stopped"));
 }
 
-void Crawler::onCrawlingSessionInitialized()
+void Spider::onCrawlingSessionInitialized()
 {
 	if (!isPreinitialized())
 	{
@@ -218,16 +218,16 @@ void Crawler::onCrawlingSessionInitialized()
 	ServiceLocator::instance()->service<INotificationService>()->info(tr("Crawler state"), tr("Crawler started"));
 }
 
-void Crawler::onCrawlerOptionsSomethingChanged()
+void Spider::onCrawlerOptionsSomethingChanged()
 {
 }
 
-bool Crawler::isPreinitialized() const
+bool Spider::isPreinitialized() const
 {
 	return m_robotsTxtLoader->isReady();
 }
 
-void Crawler::tryToLoadCrawlingDependencies()
+void Spider::tryToLoadCrawlingDependencies()
 {
 	DEBUG_ASSERT(m_options->startCrawlingPage().isValid());
 
@@ -241,7 +241,7 @@ void Crawler::tryToLoadCrawlingDependencies()
 	m_robotsTxtLoader->load();
 }
 
-IWorkerPageLoader* Crawler::createWorkerPageLoader() const
+IWorkerPageLoader* Spider::createWorkerPageLoader() const
 {
 	switch (m_downloaderType)
 	{
@@ -262,7 +262,7 @@ IWorkerPageLoader* Crawler::createWorkerPageLoader() const
 	return nullptr;
 }
 
-IDownloadHandler* Crawler::createDownloader() const
+IDownloadHandler* Spider::createDownloader() const
 {
 	switch (m_downloaderType)
 	{
@@ -283,48 +283,48 @@ IDownloadHandler* Crawler::createDownloader() const
 	return nullptr;
 }
 
-const ISpecificLoader* Crawler::robotsTxtLoader() const noexcept
+const ISpecificLoader* Spider::robotsTxtLoader() const noexcept
 {
 	return m_robotsTxtLoader;
 }
 
-QString Crawler::currentCrawledUrl() const noexcept
+QString Spider::currentCrawledUrl() const noexcept
 {
 	return m_options->startCrawlingPage().urlStr();
 }
 
-void Crawler::setUserAgent(const QByteArray& userAgent)
+void Spider::setUserAgent(const QByteArray& userAgent)
 {
 	VERIFY(QMetaObject::invokeMethod(m_downloader->qobject(), "setUserAgent",
 		Qt::BlockingQueuedConnection, Q_ARG(const QByteArray&, userAgent)));
 }
 
-const UniqueLinkStore* Crawler::uniqueLinkStore() const noexcept
+const UniqueLinkStore* Spider::uniqueLinkStore() const noexcept
 {
 	return m_uniqueLinkStore;
 }
 
-ICrawlerOptions* Crawler::options() const noexcept
+ICrawlerOptions* Spider::options() const noexcept
 {
 	return m_options;
 }
 
-size_t Crawler::scannedPagesCount() const
+size_t Spider::scannedPagesCount() const
 {
 	return m_uniqueLinkStore->crawledCount();
 }
 
-size_t Crawler::pagesCountOnSite() const
+size_t Spider::pagesCountOnSite() const
 {
 	return m_uniqueLinkStore->pendingCount();
 }
 
-void Crawler::setWorkerCount(unsigned workerCount) noexcept
+void Spider::setWorkerCount(unsigned workerCount) noexcept
 {
 	m_theradCount = workerCount;
 }
 
-bool Crawler::crawlingFinished() const noexcept
+bool Spider::crawlingFinished() const noexcept
 {
 	return m_crawlingFinished;
 }
