@@ -26,7 +26,7 @@ QVector<QRegExp> getRegExps(const QString& str)
 namespace spiderpp
 {
 
-OptionsLinkFilter::OptionsLinkFilter(const CrawlerOptionsData& crawlerOptionsData, const cpprobotparser::RobotsTxtRules& robotsTxtRules)
+OptionsLinkFilter::OptionsLinkFilter(const SpiderOptionsData& crawlerOptionsData, const cpprobotparser::RobotsTxtRules& robotsTxtRules)
 	: m_crawlerOptionsData(crawlerOptionsData)
 	, m_robotsTxtRules(robotsTxtRules)
 {

@@ -62,7 +62,7 @@ SpiderWorker::SpiderWorker(LoadSchedule* loadSchedule, IWorkerPageLoader* pageLo
 	m_defferedProcessingTimer->setSingleShot(true);
 }
 
-void SpiderWorker::start(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules)
+void SpiderWorker::start(const SpiderOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules)
 {
 	DEBUG_ASSERT(thread() == QThread::currentThread());
 
@@ -85,7 +85,7 @@ void SpiderWorker::stop()
 	m_pageLoader->setReceiveState(IWorkerPageLoader::CantReceivePages);
 }
 
-void SpiderWorker::reinitOptions(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules)
+void SpiderWorker::reinitOptions(const SpiderOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules)
 {
 	DEBUG_ASSERT(thread() == QThread::currentThread());
 

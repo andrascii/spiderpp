@@ -26,7 +26,7 @@ Spider::Spider(QObject* parent)
 	: QObject(parent)
 	, m_robotsTxtLoader(new RobotsTxtLoader(this))
 	, m_loadSchedule(nullptr)
-	, m_options(new CrawlerOptions(this))
+	, m_options(new SpiderOptions(this))
 	, m_theradCount(0)
 	, m_state(StatePending)
 	, m_downloader(nullptr)
@@ -37,7 +37,7 @@ Spider::Spider(QObject* parent)
 	serviceLocator->addService<INotificationService>(new NotificationService);
 
 	ASSERT(s_instance == nullptr && "Allowed only one instance of Crawler");
-	ASSERT(qRegisterMetaType<CrawlerOptionsData>() > -1);
+	ASSERT(qRegisterMetaType<SpiderOptionsData>() > -1);
 	ASSERT(qRegisterMetaType<cpprobotparser::RobotsTxtRules>());
 
 	Common::Helpers::connectSignalsToMetaMethod(
@@ -210,7 +210,7 @@ void Spider::onCrawlingSessionInitialized()
 	for (SpiderWorker* worker : m_workers)
 	{
 		VERIFY(QMetaObject::invokeMethod(worker, "start", Qt::QueuedConnection,
-			Q_ARG(const CrawlerOptionsData&, m_options->data()), Q_ARG(cpprobotparser::RobotsTxtRules, cpprobotparser::RobotsTxtRules(m_robotsTxtLoader->content().constData()))));
+			Q_ARG(const SpiderOptionsData&, m_options->data()), Q_ARG(cpprobotparser::RobotsTxtRules, cpprobotparser::RobotsTxtRules(m_robotsTxtLoader->content().constData()))));
 	}
 
 	emit crawlerStarted();
@@ -304,7 +304,7 @@ const LoadSchedule* Spider::uniqueLinkStore() const noexcept
 	return m_loadSchedule;
 }
 
-ICrawlerOptions* Spider::options() const noexcept
+ISpiderOptions* Spider::options() const noexcept
 {
 	return m_options;
 }

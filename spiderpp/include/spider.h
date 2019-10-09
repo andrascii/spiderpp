@@ -1,7 +1,7 @@
 #pragma once
 
 #include "load_schedule.h"
-#include "crawler_options.h"
+#include "spider_options.h"
 #include "requester_wrapper.h"
 
 namespace spiderpp
@@ -25,11 +25,11 @@ public:
 		StatePause,
 
 		// This state indicates that:
-		// 1. crawler has ended crawling or
+		// 1. spdier has ended crawling or
 		// 2. crawling still didn't started
 		StatePending,
 
-		// This state indicates that crawler:
+		// This state indicates that spider:
 		// 1. checks sitemap
 		// 2. checks robots.txt
 		// 3. checks IP address using DNS
@@ -57,7 +57,7 @@ public:
 	const ISpecificLoader* robotsTxtLoader() const noexcept;
 
 	QString currentCrawledUrl() const noexcept;
-	ICrawlerOptions* options() const noexcept;
+	ISpiderOptions* options() const noexcept;
 
 	size_t scannedPagesCount() const;
 	size_t pagesCountOnSite() const;
@@ -101,7 +101,7 @@ private:
 	ISpecificLoader* m_robotsTxtLoader;
 	LoadSchedule* m_loadSchedule;
 
-	ICrawlerOptions* m_options;
+	ISpiderOptions* m_options;
 	unsigned int m_theradCount;
 
 	std::vector<SpiderWorker*> m_workers;

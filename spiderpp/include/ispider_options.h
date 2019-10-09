@@ -19,17 +19,17 @@ enum ParserType
 
 Q_DECLARE_FLAGS(ParserTypeFlags, ParserType)
 
-struct CrawlerOptionsData;
+struct SpiderOptionsData;
 
-class ICrawlerOptions
+class ISpiderOptions
 {
 public:
 	virtual QObject* qobject() const noexcept = 0;
 
-	virtual const CrawlerOptionsData& data() const noexcept = 0;
-	virtual void setData(const CrawlerOptionsData& data) noexcept = 0;
-	virtual void setData(CrawlerOptionsData&& data) noexcept = 0;
-	virtual void dataChanged(const CrawlerOptionsData& data) const = 0;
+	virtual const SpiderOptionsData& data() const noexcept = 0;
+	virtual void setData(const SpiderOptionsData& data) noexcept = 0;
+	virtual void setData(SpiderOptionsData&& data) noexcept = 0;
+	virtual void dataChanged(const SpiderOptionsData& data) const = 0;
 
 	virtual Url startCrawlingPage() const noexcept = 0;
 	virtual void setStartCrawlingPage(const Url& url) = 0;

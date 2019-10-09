@@ -1,6 +1,6 @@
 #pragma once
 
-#include "icrawler_options.h"
+#include "ispider_options.h"
 #include "user_agent_type.h"
 
 namespace spiderpp
@@ -8,7 +8,7 @@ namespace spiderpp
 
 constexpr size_t c_extractorCount = 10;
 
-struct CrawlerOptionsData final
+struct SpiderOptionsData final
 {
 	Url startCrawlingPage;
 	int limitSearchTotal = int();
@@ -47,7 +47,7 @@ struct CrawlerOptionsData final
 	QString excludeUrlRegExps;
 };
 
-class CrawlerOptions : public QObject, public ICrawlerOptions
+class SpiderOptions : public QObject, public ISpiderOptions
 {
 	Q_OBJECT
 
@@ -88,14 +88,14 @@ class CrawlerOptions : public QObject, public ICrawlerOptions
 	Q_PROPERTY(QString excludeUrlRegExps READ excludeUrlRegExps WRITE setExcludeUrlRegExps NOTIFY excludeUrlRegExpsChanged);
 
 public:
-	CrawlerOptions(QObject* parent = nullptr);
+	SpiderOptions(QObject* parent = nullptr);
 
 	virtual QObject* qobject() const noexcept override;
 
-	virtual const CrawlerOptionsData& data() const noexcept override;
-	virtual void setData(const CrawlerOptionsData& data) noexcept override;
-	virtual void setData(CrawlerOptionsData&& data) noexcept override;
-	Q_SIGNAL virtual void dataChanged(const CrawlerOptionsData& data) const override;
+	virtual const SpiderOptionsData& data() const noexcept override;
+	virtual void setData(const SpiderOptionsData& data) noexcept override;
+	virtual void setData(SpiderOptionsData&& data) noexcept override;
+	Q_SIGNAL virtual void dataChanged(const SpiderOptionsData& data) const override;
 
 	virtual Url startCrawlingPage() const noexcept override;
 	Q_SLOT virtual void setStartCrawlingPage(const Url& url) override;
@@ -238,9 +238,9 @@ public:
 	Q_SIGNAL virtual void excludeUrlRegExpsChanged(const QString& value) const override;
 
 private:
-	CrawlerOptionsData m_data;
+	SpiderOptionsData m_data;
 };
 
 }
 
-Q_DECLARE_METATYPE(spiderpp::CrawlerOptionsData)
+Q_DECLARE_METATYPE(spiderpp::SpiderOptionsData)

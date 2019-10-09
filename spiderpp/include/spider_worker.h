@@ -2,7 +2,7 @@
 
 #include "robots_txt_rules.h"
 #include "data_to_load.h"
-#include "crawler_options.h"
+#include "spider_options.h"
 #include "options_link_filter.h"
 #include "url_parser.h"
 #include "load_result.h"
@@ -26,8 +26,8 @@ signals:
 	void onAboutLoadResult(LoadResult loadResult) const;
 
 public slots:
-	void reinitOptions(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules);
-	void start(const CrawlerOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules);
+	void reinitOptions(const SpiderOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules);
+	void start(const SpiderOptionsData& optionsData, cpprobotparser::RobotsTxtRules robotsTxtRules);
 	void stop();
 
 private slots:
@@ -48,7 +48,7 @@ private:
 	bool m_isRunning;
 
 	QTimer* m_defferedProcessingTimer;
-	CrawlerOptionsData m_optionsData;
+	SpiderOptionsData m_optionsData;
 	IWorkerPageLoader* m_pageLoader;
 
 	QVector<QRegExp> m_excludeUrlRegExps;

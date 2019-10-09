@@ -7,7 +7,7 @@
 namespace spiderpp
 {
 
-struct CrawlerOptionsData;
+struct SpiderOptionsData;
 struct DataToLoad;
 
 class IWorkerPageLoader
