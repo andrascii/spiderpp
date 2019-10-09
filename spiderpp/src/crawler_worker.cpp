@@ -150,21 +150,6 @@ void CrawlerWorker::onLoadingDone(HopsChain& redirectChain, DownloadRequestType 
 	handleResponse(redirectChain, requestType);
 }
 
-void CrawlerWorker::onPageParsed(const WorkerResult& result) const noexcept
-{
-	if (result.incomingPageConstRef()->isRedirectedToExternalPage())
-	{
-		DEBUG_ASSERT(result.incomingPageConstRef()->allResourcesOnPage.size() == 1 &&
-			!result.incomingPageConstRef()->allResourcesOnPage.begin()->restrictions);
-	}
-
-	DEBUG_ASSERT(!result.incomingPageConstRef()->redirectedUrl.isValid() ||
-		!result.incomingPageConstRef()->isThisExternalPage ||
-		result.incomingPageConstRef()->allResourcesOnPage.size() == 1);
-
-	emit workerResult(result);
-}
-
 void CrawlerWorker::fixDDOSGuardRedirectsIfNeeded(std::vector<ParsedPagePtr>& pages) const
 {
 	const int pagesCount = static_cast<int>(pages.size());

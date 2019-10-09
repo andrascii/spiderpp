@@ -47,10 +47,7 @@ private:
 
 
 	bool isExcludedByRegexp(const Url& url) const;
-
-	void onPageParsed(const WorkerResult& result) const noexcept;
 	void fixDDOSGuardRedirectsIfNeeded(std::vector<ParsedPagePtr>& pages) const;
-
 	void handleResponse(HopsChain& hopsChain, DownloadRequestType requestType);
 	void handlePage(const Hop& loadResult);
 
