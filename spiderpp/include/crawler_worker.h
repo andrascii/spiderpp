@@ -3,7 +3,6 @@
 #include "parsed_page.h"
 #include "robots_txt_rules.h"
 #include "crawler_request.h"
-#include "worker_result.h"
 #include "crawler_options.h"
 #include "options_link_filter.h"
 #include "url_parser.h"

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "crawler_request.h"
-#include "worker_result.h"
 #include "download_request.h"
 #include "redirect_chain.h"
 
